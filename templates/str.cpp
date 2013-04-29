@@ -52,13 +52,28 @@ string i2s(int Number){
 //string to int
 int s2i(string Text){
   int Number;
-  if ( ! (istringstream(Text) >> Number) ) Number = 0;
+  if ( ! (istringstream(Text) >> Number) ) Number = -1;
   return Number;
 }
 
 //is s palindrome?
 bool isPalindrome(string s){
   return s==string( s.rbegin(), s.rend() )? true : false;
+}
+
+//http://stackoverflow.com/questions/5891610/how-to-remove-characters-from-a-string
+void remChar(string s, char c){
+  s.erase (remove(s.begin(), s.end(), c), s.end());
+}
+
+//http://d.hatena.ne.jp/kobapan/20090208/1234022527
+string replace(string str, const string& from, const string& to){
+  string::size_type pos = 0;
+  while(pos = str.find(from, pos), pos != string::npos) {
+	str.replace(pos, from.length(), to);
+	pos += to.length();
+  }
+  return str;
 }
 
 int pow(int n, int p, int m){

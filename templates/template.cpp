@@ -25,11 +25,12 @@ typedef unsigned int ui;
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> P;
+const int INF = (int)1e9;
 const int MOD = (int)1e9 + 7;
 const double EPS = 1e-10;
-//const int INF = INT_MAX;
-const int dx[] = {1, -1, 0, 0, 1, -1, -1, 1};
-const int dy[] = {0, 0, 1, -1, -1, -1, 1, 1};
+//const int dx[] = {1, -1, 0, 0, 1, -1, -1, 1};
+//const int dy[] = {0, 0, 1, -1, -1, -1, 1, 1};
+//const int weight[] = {0,1,10,100,1000,10000,100000,1000000,10000000};
 
 void doIt(){
 }
