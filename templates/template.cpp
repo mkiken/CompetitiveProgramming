@@ -21,6 +21,8 @@ using namespace std;
 #define rvsort(v, t) sort(v.begin(), v.end(), greater<t>())
 #define asort(a) sort(a, a + len(a))
 #define rasort(a, t) sort(a, a + len(a), greater<t>())
+#define dmax(a, b) (a < b? b : a)
+#define dmin(a, b) (a > b? b : a)
 typedef unsigned int ui;
 typedef long long ll;
 typedef unsigned long long ull;
@@ -33,10 +35,10 @@ const double EPS = 1e-10;
 //const int weight[] = {0,1,10,100,1000,10000,100000,1000000,10000000};
 typedef struct _Node {
   _Node(int arg1 = 0, int arg2 = 0 , int arg3 = 0) {
-        i = arg1;
-        j = arg2;
-		k = arg3;
-    }
+	i = arg1;
+	j = arg2;
+	k = arg3;
+  }
   int i,j,k;
   bool operator <(const struct _Node &e) const{
     return i == e.i? j < e.j : i < e.i;

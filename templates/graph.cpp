@@ -31,7 +31,7 @@ const int INF = 10000000;
 const int dx[] = {1, -1, 0, 0, 1, -1, -1, 1};
 const int dy[] = {0, 0, 1, -1, -1, -1, 1, 1};
 
-const int MAX_N = 3005, WHITE = 0, GLAY = 1, BLACK = 2;
+const int MAX_N = 3005, WHITE = 0, GRAY = 1, BLACK = 2;
 int color[MAX_N], low[MAX_N], pred[MAX_N], d[MAX_N], ttime = 0;
 vector<int> edge[MAX_N];
 set<int> bridge;
@@ -39,7 +39,7 @@ set<int> bridge;
 // Tarjan's Algorithm for Articulation Points
 void dfs(int v){
   int children = 0;
-  color[v] = GLAY;
+  color[v] = GRAY;
   low[v] = d[v] = ++ttime;
   rep(i, 0, edge[v].size()){
 	int w = edge[v][i];
@@ -81,6 +81,7 @@ void doIt(){
 }
 
 //code from CodeChef Kingdom Unity
+//http://ww2.codechef.com/APRIL13/problems/KINGCON
 int main() {
   doIt();
   return 0;
