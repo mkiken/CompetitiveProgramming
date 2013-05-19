@@ -23,6 +23,7 @@ using namespace std;
 #define rasort(a, t) sort(a, a + len(a), greater<t>())
 #define dmax(a, b) (a < b? b : a)
 #define dmin(a, b) (a > b? b : a)
+#define dabs(a) (a < 0? -a : a)
 typedef unsigned int ui;
 typedef long long ll;
 typedef unsigned long long ull;

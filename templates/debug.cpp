@@ -36,9 +36,9 @@ void vprt(vector<int> v){
   rep(i, 1, v.size()) cout << " " << v[i];
   cout << endl;
 }
-void aprt(int *v){
+void aprt(int *v, int len){
   cout << v[0];
-  rep(i, 1, len(v)) cout << " " << v[i];
+  rep(i, 1, len) cout << " " << v[i];
   cout << endl;
 }
 
