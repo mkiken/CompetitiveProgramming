@@ -1,7 +1,7 @@
 #include <iostream>
-//#include <cstdio>
+#include <cstdio>
 //#include <cstdlib>
-//#include <cmath>
+#include <cmath>
 #include <vector>
 #include <algorithm>
 #include <string>
@@ -9,7 +9,7 @@
 #include <set>
 #include <queue>
 //#include <limits>
-//#include <sstream>
+#include <sstream>
 //#include <functional>
 using namespace std;
 
