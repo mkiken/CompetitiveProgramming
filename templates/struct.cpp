@@ -39,6 +39,21 @@ const double EPS = 1e-10;
 //const int dy[] = {0, 0, 1, -1, -1, -1, 1, 1};
 //const int weight[] = {0,1,10,100,1000,10000,100000,1000000,10000000};
 //priority_queue<int, vector<int>, greater<int>> q;
+typedef struct _Node {
+  _Node(int arg1 = 0, int arg2 = 0 , int arg3 = 0) {
+	i = arg1;
+	j = arg2;
+	k = arg3;
+  }
+  int i,j,k;
+  bool operator <(const struct _Node &e) const{
+    return i == e.i? j < e.j : i < e.i;
+  }
+  bool operator >(const struct _Node &e) const{
+    return i == e.i? j > e.j : i > e.i;
+  }
+}node;
+
 
 void doIt(){
 }
