@@ -8,6 +8,7 @@
 #include <map>
 #include <set>
 #include <queue>
+//#include <stack>
 //#include <limits>
 #include <sstream>
 //#include <functional>
@@ -38,7 +39,7 @@ const double EPS = 1e-10;
 //const int dx[] = {1, -1, 0, 0, 1, -1, -1, 1};
 //const int dy[] = {0, 0, 1, -1, -1, -1, 1, 1};
 //const int weight[] = {0,1,10,100,1000,10000,100000,1000000,10000000};
-//priority_queue<int, vector<int>, greater<int>> q;
+//priority_queue< int, vector<int>, greater<int> > q;
 
 void doIt(){
 }
