@@ -58,7 +58,7 @@ void doIt(){
   const int MAX_N = 10002;
   bool bPrimes[MAX_N];
   vector<int> primes;
-  mfill(bPrimes, true);
+  afill(bPrimes, true);
   bPrimes[0] = bPrimes[1] = false;
   rep(i, 2, MAX_N){
 	if(bPrimes[i]){

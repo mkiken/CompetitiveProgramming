@@ -12,6 +12,8 @@
 //#include <limits>
 #include <sstream>
 //#include <functional>
+#include <complex>
+
 using namespace std;
 
 #define len(array)  (sizeof (array) / sizeof *(array))
@@ -29,10 +31,13 @@ using namespace std;
 #define fmax(a, b) (a < b? b : a)
 #define fmin(a, b) (a > b? b : a)
 #define fabs(a) (a < 0? -a : a)
+#define X real()
+#define Y imag()
 typedef unsigned int ui;
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> P;
+typedef complex<double> p;
 const int INF = (int)1e9;
 const int MOD = (int)1e9 + 7;
 const double EPS = 1e-10;
