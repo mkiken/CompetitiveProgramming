@@ -47,10 +47,10 @@ typedef struct _Node {
   }
   int i,j,k;
   bool operator <(const struct _Node &e) const{
-    return i == e.i? j < e.j : i < e.i;
+    return i == e.i? (j == e.j? k < e.k : j < e.j) : i < e.i;
   }
   bool operator >(const struct _Node &e) const{
-    return i == e.i? j > e.j : i > e.i;
+    return i == e.i? (j == e.j? k > e.k : j > e.j) : i > e.i;
   }
 }node;
 

@@ -28,12 +28,25 @@ const double EPS = 1e-10;
 //const int INF = INT_MAX;
 const int dx[] = {1, -1, 0, 0, 1, -1, -1, 1};
 const int dy[] = {0, 0, 1, -1, -1, -1, 1, 1};
+
+
+double combi[1001][1001]; //aCb = combi[a][b]
+int MAX_N = 1000;
+
+void makeCombi(){
+  mfill2(combi, 0, ll);
+  rep(i, 0, MAX_N+1) combi[i][0] = 1;
+  rep(i, 1, MAX_N+1){
+	rep(j, 1, i+1) combi[i][j] = combi[i-1][j-1] + combi[i-1][j];
+  }
+}
+
 //n**p % m
-int pow(int n, int p, int m){
+int powMod(int n, int p, int m){
   ll ans = 1, ln = n;
   if(p <= 0) return 1;
   while(p != 0){
-	if(p & 1 == 1) ans = (ans*ln) % m;
+	if((p & 1) == 1) ans = (ans*ln) % m;
 	ln = (ln * ln) % m;
 	p = p >> 1;
   }
@@ -76,7 +89,7 @@ int perm(int n, int k, int m){
 }
 
 //nCk mod m
-int combi(int n, int k, int m){
+int comb(int n, int k, int m){
   ll l = 1, c = 1;
   if(n - k < k) k = n - k;
   rep(i, 0, k - 1){
@@ -93,6 +106,18 @@ int rep_perm(int n, vector<int> a, int m){
   return (int)((ret * mod_inverse(pdt, m)) % m);
 }
 
+//calculate (a*b)%m
+//http://discuss.codechef.com/questions/9723/witmath-editorial
+ull bigMul(ull a, ull b, int m){
+	int base = (int)1e9;
+	ull a_low = a % base, a_high = a / base, b_low = b % base, b_high = b / base, result; 
+	result = (a_high * b_high) % m;
+	rep(i, 0, 9) result = (result * 10) % m;
+	result = (result + a_low*b_high + b_low*a_high) % m;
+	rep(i, 0, 9) result = (result * 10) % m;
+	result = (result + a_low*b_low) % m;
+	return result;
+}
 
 
 void doIt(){
