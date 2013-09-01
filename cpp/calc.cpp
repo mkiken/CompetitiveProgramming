@@ -41,6 +41,30 @@ void makeCombi(){
   }
 }
 
+//n**p
+ll lpow(ll n, ll p){
+  ll ans = 1, ln = n;
+  if(p <= 0) return 1;
+  while(p != 0){
+	if((p & 1) == 1) ans = ans*ln;
+	ln = ln * ln;
+	p = p >> 1;
+  }
+  return ans;
+}
+
+//n**p
+template <typename T> T fpow(T n, T p){
+  T ans = 1, ln = n;
+  if(p <= 0) return 1;
+  while(p != 0){
+	if((p & 1) == 1) ans = ans*ln;
+	ln = ln * ln;
+	p = p >> 1;
+  }
+  return ans;
+}
+
 //n**p % m
 int powMod(int n, int p, int m){
   ll ans = 1, ln = n;
