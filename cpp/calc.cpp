@@ -1,40 +1,54 @@
 #include <iostream>
-//#include <cstdio>
-//#include <cmath>
+#include <cstdio>
+//#include <cstdlib>
+#include <cmath>
 #include <vector>
 #include <algorithm>
-//#include <string>
-//#include <map>
-//#include <set>
-//#include <queue>
+#include <string>
+#include <map>
+#include <set>
+#include <queue>
+//#include <stack>
 //#include <limits>
+#include <sstream>
+//#include <functional>
+#include <complex>
+
 using namespace std;
 
 #define len(array)  (sizeof (array) / sizeof *(array))
 #define rep(i, s, e) for(int i = s;i < e;i++)
 #define rrep(i, e, s) for(int i = e;s <= i;i--)
-#define mfill(a, v) fill(a, a + len(a), v)
-#define mfill2(a, v, t) fill((t *)a, (t *)(a + len(a)), v)
-#define vsort(v) sort(v.begin(), v.end())
-#define rvsort(v, t) sort(v.begin(), v.end(), greater<t>())
-#define asort(a) sort(a, a + len(a))
-#define rasort(a, t) sort(a, a + len(a), greater<t>())
+#define vrange(v) v.begin(), v.end()
+#define vrrange(v) v.rbegin(), v.rend()
+#define vsort(v) sort(vrange(v))
+#define vrsort(v) sort(vrrange(v))
+#define arange(a) a, a + len(a)
+#define asort(a) sort(arange(a))
+#define arsort(a, t) sort(arange(a), greater<t>())
+#define afill(a, v) fill(arange(a), v)
+#define afill2(a, v, t) fill((t *)a, (t *)(a + len(a)), v)
+#define fmax(a, b) (a < b? b : a)
+#define fmin(a, b) (a > b? b : a)
+#define fabs(a) (a < 0? -a : a)
+#define X real()
+#define Y imag()
 typedef unsigned int ui;
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> P;
+typedef complex<double> p;
+const int INF = (int)1e9;
 const int MOD = (int)1e9 + 7;
 const double EPS = 1e-10;
-//const int INF = INT_MAX;
-const int dx[] = {1, -1, 0, 0, 1, -1, -1, 1};
-const int dy[] = {0, 0, 1, -1, -1, -1, 1, 1};
+
 
 
 double combi[1001][1001]; //aCb = combi[a][b]
 int MAX_N = 1000;
 
 void makeCombi(){
-  mfill2(combi, 0, ll);
+  afill2(combi, 0, double);
   rep(i, 0, MAX_N+1) combi[i][0] = 1;
   rep(i, 1, MAX_N+1){
 	rep(j, 1, i+1) combi[i][j] = combi[i-1][j-1] + combi[i-1][j];

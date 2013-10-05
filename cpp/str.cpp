@@ -56,6 +56,25 @@ int s2i(string Text){
   return Number;
 }
 
+//string to double
+//http://eternuement.blogspot.jp/2011/04/c-string-double-int.html
+double s2f(string str){
+  double rt;
+  stringstream ss;
+  ss << str;
+  ss >> rt;
+  return rt;
+}
+
+//double to string
+string f2s(double d){
+  string rt;
+  stringstream ss;
+  ss << d;
+  ss >> rt;
+  return rt;
+}
+
 //is s palindrome?
 bool isPalindrome(string s){
   return s==string( s.rbegin(), s.rend() )? true : false;

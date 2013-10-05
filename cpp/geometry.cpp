@@ -44,10 +44,12 @@ const double EPS = 1e-10;
 
 
 // http://d.hatena.ne.jp/otaks/20100929
+// http://www.cplusplus.com/reference/complex/
 typedef complex<double> p;
 //XY座標
 #define X real()
 #define Y imag()
+
 
 class Triangle{
 
@@ -77,19 +79,22 @@ public:
 	sinC = getSine(p1 - p3, p2 - p3);
   }
 
+  //p1とp2の内積
+  double dot(p p1, p p2){
+	return p1.X*p2.X + p1.Y*p2.Y;
+  }
+
+  //p1とp2の外積
+  double det(p p1, p p2){
+	return p1.X*p2.Y - p2.X*p1.Y;
+  }
+
   //3点が一直線上だったら三角形ではない
   bool isTriangle(){
 	double t = det(a - c, b - c);
 	return abs(t) < EPS? false : true;
   }
-  //p1とp2の内積
-  double dot(p p1, p p2){
-	return p1.X*p2.X + p1.Y*p2.Y;
-  }
-  //p1とp2の外積
-  double det(p p1, p p2){
-	return p1.X*p2.Y - p2.X*p1.Y;
-  }
+
   //余弦定理からcosを求める関数
   double LawOfCosines(double a,double b, double c){
 	return (b*b+c*c-a*a) / (2.0*b*c);
@@ -121,6 +126,15 @@ public:
 	double y = (c1*a2 - c2*a1)*1.0 / (a1*b2 - a2*b1);
 	return p(x, y);
   }
+
+  //http://www004.upp.so-net.ne.jp/s_honma/urawaza/area2.htm
+  double getArea(){
+	double s = 0;
+	s += (a.X - b.X) * (a.Y + b.Y);
+	s += (b.X - c.X) * (b.Y + c.Y);
+	s += (c.X - a.X) * (c.Y + a.Y);
+	return fabs(s) * 0.5;
+  }
 };
 
 // 円クラス
@@ -145,6 +159,117 @@ public:
   }
 };
 
+//二次元座標(from 蟻本)
+typedef struct _PT{
+  double x, y;
+  _PT() {}
+  _PT(double x, double y) : x(x), y(y){
+  }
+  _PT operator + (_PT p){
+	return _PT(x + p.x, y + p.y);
+  }
+  _PT operator - (_PT p){
+	return _PT(x - p.x, y - p.y);
+  }
+  _PT operator * (double d){
+	return _PT(d*x, d*y);
+  }
+  double dot(_PT p){ //pとの内積
+	return x * p.x + y * p.y;
+  }
+  double det(_PT p){ //pとの外積
+	return x * p.y - p.x * y;
+  }
+  double dist(_PT p){ //pとの距離の2乗
+	return (x-p.x)*(x-p.x) + (y-p.y)*(y-p.y);
+  }
+  double norm(){
+	return x*x + y*y;
+  }
+
+  bool operator <(const struct _PT &e) const{
+    return x == e.x? (y < e.y) : x < e.x;
+  }
+  bool operator >(const struct _PT &e) const{
+    return x == e.x? (y > e.y) : x > e.x;
+  }
+
+} pt;
+
+//http://www.prefield.com/algorithm/geometry/ccw.html
+//与えられた三点 a, b, c を a → b → c と進む
+int ccw(_PT a, _PT b, _PT c) {
+  _PT bb = b - a, cc = c - a;;
+  if (bb.det(cc) > 0)   return +1;       // counter clockwise
+  if (bb.det(cc) < 0)   return -1;       // clockwise
+  if (bb.dot(cc) < 0)     return +2;       // c--a--b on line
+  if (bb.norm() < cc.norm()) return -2;       // a--b--c on line
+  return 0;
+}
+double pdet(pt p1, pt p2){ //pとの外積
+	return p1.x * p2.y - p1.x * p2.y;
+}
+
+
+
+class Polygon{
+
+private:
+
+public:
+  vector<pt> pts;
+  int n;
+  Polygon(){}
+  Polygon(vector<pt> v){
+	n = v.size();
+	pts = v;
+  }
+  //凸包（蟻本ver）
+  vector<pt> convex_hull(){
+	vector<pt> qs(n * 2);
+	int k = 0;
+	vsort(pts);
+	rep(i, 0, n){ //下側凸包の作成
+	  while(k > 1 && (qs[k-1] - qs[k-2]).det(pts[i] - qs[k-1]) <= 0) k--;
+	  qs[k++] = pts[i];
+	}
+	for(int i = n - 2, t = k; i >= 0; i--){ //上側凸包の作成
+	  while(k > t && (qs[k-1] - qs[k-2]).det(pts[i] - qs[k-1]) <= 0) k--;
+	  qs[k++] = pts[i];
+	}
+	qs.resize(k-1);
+	n = k-1;
+	pts = qs;
+	return qs;
+  }
+
+  //点が図形を構成する順番に並んでないと駄目。並んでなければconvex_hullで矯正してから
+   double getArea(){
+	double s = 0;
+	rep(i, 0, n-1) s += pts[i].det(pts[i+1]);
+	s += pts[n-1].det(pts[0]);
+	return fabs(s) * 0.5;
+   }
+
+  //http://www004.upp.so-net.ne.jp/s_honma/urawaza/area2.htm
+  double _getArea(){
+	double s = 0;
+	rep(i, 0, n-1) s += (pts[i].x - pts[i+1].x) * (pts[i].y + pts[i+1].y);
+	s += (pts[n-1].x - pts[0].x) *( pts[n-1].y + pts[0].y);
+	return fabs(s) * 0.5;
+  }
+
+  //http://imagingsolution.net/math/calc_n_point_area/
+  //点が時計回りか反時計回りに並んでないと駄目
+  double getArea2(){
+	double s = 0;
+	rep(i, 0, n-1) s += pts[i].x * pts[i+1].y + pts[i+1].x * pts[i].y;
+	s += pts[n-1].x * pts[0].y + pts[0].x * pts[n-1].y;
+	return fabs(s) * 0.5;
+  }
+
+};
+
 
 
 //AOJ0010
@@ -160,12 +285,32 @@ void aoj0010(){
   }
 }
 
+void area_test(){
+  vector<pt> v;
+  v.push_back(pt(0, 0));
+  v.push_back(pt(0, 1));
+  v.push_back(pt(1, 1));
+  v.push_back(pt(2, 0));
+  v.push_back(pt(1, -1));
+  do{
+	Polygon p = Polygon(v);
+	//cout << p.getArea() << endl;
+	p.convex_hull();
+	rep(i, 0, p.pts.size()){
+	  printf("%f %f\n" , p.pts[i].x, p.pts[i].y);
+	}
+	printf("s = %f, n = %d\n", p._getArea(), p.n);
+  }while(next_permutation(v.begin(), v.end()));
+
+}
+
 void doIt(){
   Triangle t = Triangle(p(0, 1), p(1, 2), p(2, 3));
   cout << t.isTriangle() << endl;
 }
 
 int main() {
-  doIt();
+  //doIt();
+  area_test();
   return 0;
 }

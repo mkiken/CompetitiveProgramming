@@ -34,5 +34,8 @@ getAbundant i lim
 	| otherwise = getAbundant (i+1) lim
 	where adt = (sum (getDivs i)) - i
 
+--isSqrtInt :: Int -> Bool
+isSqrtInt n = n == rt*rt
+	where rt = (round . sqrt . fromIntegral) n
 
 main = print $ digitSum 123

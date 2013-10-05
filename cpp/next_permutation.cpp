@@ -50,6 +50,8 @@ bool next_combination ( BidirectionalIterator first ,
 
 void doIt3(){
   int ary[] = {1, 2, 3, 4, 5};
+  //ソートが必要！
+  sort(ary, ary + 5);
   do{
 	for(int i = 0; i < 3; i++) cout << ary[i] << " " ;
 	cout << endl;
