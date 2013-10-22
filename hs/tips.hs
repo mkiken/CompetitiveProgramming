@@ -1,5 +1,15 @@
 import Data.Char
 
+--パスカルの三角形を表示
+--https://www.hackerrank.com/challenges/pascals-triangle
+fact n = product [1..n]
+writeLine i = forM_ [0..i+1] (writeElement i)
+writeElement row col
+	| col == (row+1) = putChar '\n'
+        | otherwise = do
+        	printf "%d " $ div (fact (row)) ((fact (col)) * (fact (row-col)))
+pascal n = forM_ [0..n-1] writeLin e
+
 --digitSum : 整数nの各桁の総和を出す
 mOrd n = (ord n) - (ord '0')
 digitSum n = sum $ map mOrd (show n)
