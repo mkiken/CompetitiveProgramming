@@ -32,6 +32,9 @@ i2h n = showHex n ""
 
 isPalindrome s = s == reverse s
 
+--http://stackoverflow.com/questions/4597820/does-haskell-have-list-slices-i-e-python
+slice start end = take (end - start + 1) . drop start
+
 main = print $ isPalindrome "ab"
 --main = print $ remChar ',' "a,b,c"
 --main = print $ splitComma "a,b,c"

@@ -195,7 +195,14 @@ typedef struct _PT{
   }
 
 } pt;
-
+// 線分p1-p2上に点qがあるか判定
+bool on_seg(pt p1, pt p2, pt q){
+	return (p1 - q).det(p2 - q) == 0 && (p1 - q).dot(p2 - q) <= 0;
+}
+// 直線p1-p2とq1-q2の交点
+pt intersection(pt p1, pt p2, pt q1, pt q2){
+	return p1 + (p2 - p1) * ((q2 - q1).det(q1 - p1) / (q2 - q1).det(p2 - p1));
+}
 //http://www.prefield.com/algorithm/geometry/ccw.html
 //与えられた三点 a, b, c を a → b → c と進む
 int ccw(_PT a, _PT b, _PT c) {

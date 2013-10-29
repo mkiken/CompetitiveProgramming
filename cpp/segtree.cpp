@@ -36,7 +36,7 @@ const int INF = (int)1e9;
 const int MOD = (int)1e9 + 7;
 const double EPS = 1e-10;
 
-#define MAX_N 100000
+#define MAX_N 100002
 #define MAX_SIZE MAX_N * 4
 
 //Starry Sky Tree
@@ -44,44 +44,36 @@ const double EPS = 1e-10;
 
 //Segment Tree for minimum value.
 ll segMin[MAX_SIZE], segAddMin[MAX_SIZE];
-
 void _addMin(int a, int b, int x, int k, int l, int r){
   if (r <= a || b <= l) return;
-
   if (a <= l && r <= b){
 	segAddMin[k] += x;
 	while (k){
 	  k = (k - 1) / 2;
-	  segMin[k] = min(segMin[k * 2 + 1] + segAddMin[k * 2 + 1], segMin[k * 2 + 2] + segAddMin[k * 2 + 2]);
+	  segMin[k] = fmin(segMin[k * 2 + 1] + segAddMin[k * 2 + 1], segMin[k * 2 + 2] + segAddMin[k * 2 + 2]);
 	}
 	return;
   }
-
   _addMin(a, b, x, k * 2 + 1, l, (l + r) / 2);
   _addMin(a, b, x, k * 2 + 2, (l + r) / 2, r);
 }
-
 ll _getMin(int a, int b, int k, int l, int r){
   if (r <= a || b <= l) return INF;
   if (a <= l && r <= b) return (segMin[k] + segAddMin[k]);
   ll left = _getMin(a, b, k * 2 + 1, l, (l + r) / 2);
   ll right = _getMin(a, b, k * 2 + 2, (l + r) / 2, r);
-  return (fmin(left, right) + segAddMin[k]);
+  return fmin(left, right) + segAddMin[k];
 }
-
 //区間[a, b)に値xを加算する.sizeは木の要素数
 void addMin(int a, int b, int x, int size){
   _addMin(a, b, x, 0, 0, size);
 }
-
 ll getMin(int a, int b, int size){
   return _getMin(a, b, 0, 0, size);
 }
 
 //Segment Tree for maximum value.
-
 ll segMax[MAX_SIZE], segAddMax[MAX_SIZE];
-
 void _addMax(int a, int b, int x, int k, int l, int r){
   if (r <= a || b <= l) return;
   if (a <= l && r <= b){
@@ -92,33 +84,27 @@ void _addMax(int a, int b, int x, int k, int l, int r){
 	}
 	return;
   }
-
   _addMax(a, b, x, k * 2 + 1, l, (l + r) / 2);
   _addMax(a, b, x, k * 2 + 2, (l + r) / 2, r);
 }
-
 ll _getMax(int a, int b, int k, int l, int r){
   if (r <= a || b <= l) return -1;
   if (a <= l && r <= b) return (segMax[k] + segAddMax[k]);
   ll left = _getMax(a, b, k * 2 + 1, l, (l + r) / 2);
   ll right = _getMax(a, b, k * 2 + 2, (l + r) / 2, r);
-  return (max(left, right) + segAddMax[k]);
+  return fmax(left, right) + segAddMax[k];
 }
-
 //区間[a, b)に値xを加算する.
 void addMax(int a, int b, int x, int size){
   _addMax(a, b, x, 0, 0, size);
 }
-
 ll getMax(int a, int b, int size){
   return _getMax(a, b, 0, 0, size);
 }
 
 
 //Segment Tree for sum value.
-
 ll all[MAX_SIZE], part[MAX_SIZE];
-
 //区間[a, b)に値xを加算する.
 void _addSum(int a, int b, int x, int k, int l, int r){
   if (a <= l && r <= b) all[k] += x;
@@ -128,7 +114,6 @@ void _addSum(int a, int b, int x, int k, int l, int r){
 	_addSum(a, b, x, k * 2 + 2, (l + r) / 2, r);
   }
 }
-
 ll _getSum(int a, int b, int k, int l, int r){
   if (b <= l || r <= a) return 0;
   else if (a <= l && r <= b) return (all[k] * (r - l) + part[k]);
@@ -140,11 +125,9 @@ ll _getSum(int a, int b, int k, int l, int r){
 	return res;
   }
 }
-
 void addSum(int a, int b, int x, int size){
   _addSum(a, b, x, 0, 0, size);
 }
-
 ll getSum(int a, int b, int size){
   _getSum(a, b, 0, 0, size);
 }
