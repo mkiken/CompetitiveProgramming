@@ -9,6 +9,7 @@
 //#include <queue>
 //#include <limits>
 #include <sstream>
+#include <bitset>
 using namespace std;
 
 typedef long long ll;
@@ -43,6 +44,14 @@ vector<string> split( string s, string c )
 	ret.push_back(tmp);
   }
   return ret;
+}
+
+// http://oshiete.goo.ne.jp/qa/542967.html
+string i2b(unsigned long n) {
+  return bitset<32>(n).to_string<char,char_traits<char>,allocator<char> >();
+}
+unsigned long b2i(const string& s) {
+  return bitset<32>(s).to_ulong();
 }
 
 //int to string

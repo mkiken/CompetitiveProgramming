@@ -2,6 +2,7 @@ import java.util.Scanner
 
 object Euler18 {
   def main(args: Array[String]){
+    // val ar = Array.fill(n)(sc.nextInt());
     doIt()
   }
 

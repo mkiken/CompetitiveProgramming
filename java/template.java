@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 public class Main {
 
+	static final int MOD = 1000000007;
 	static final int MAX_N = 1000;
 
 	public static void main(String[] args) {

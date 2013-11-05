@@ -46,7 +46,6 @@ const double EPS = 1e-10;
 
 double combi[1001][1001]; //aCb = combi[a][b]
 int MAX_N = 1000;
-
 void makeCombi(){
   afill2(combi, 0, double);
   rep(i, 0, MAX_N+1) combi[i][0] = 1;
@@ -148,7 +147,7 @@ int rep_perm(int n, vector<int> a, int m){
 //http://discuss.codechef.com/questions/9723/witmath-editorial
 ull bigMul(ull a, ull b, int m){
 	int base = (int)1e9;
-	ull a_low = a % base, a_high = a / base, b_low = b % base, b_high = b / base, result; 
+	ull a_low = a % base, a_high = a / base, b_low = b % base, b_high = b / base, result;
 	result = (a_high * b_high) % m;
 	rep(i, 0, 9) result = (result * 10) % m;
 	result = (result + a_low*b_high + b_low*a_high) % m;

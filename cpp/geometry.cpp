@@ -52,7 +52,6 @@ typedef complex<double> p;
 
 
 class Triangle{
-
 private:
   //三角形の3点の座標
   p a, b, c;
@@ -61,7 +60,6 @@ private:
   //三角形の3角の大きさ(ラジアン)
   //double A, B, C;
   double cosA, cosB, cosC, sinA, sinB, sinC;
-
 public:
   //コンストラクタ(3つの点と辺と角度を初期化)
   Triangle(p p1, p p2, p p3){
@@ -78,23 +76,19 @@ public:
 	sinB = getSine(p1 - p2, p3 - p2);
 	sinC = getSine(p1 - p3, p2 - p3);
   }
-
   //p1とp2の内積
   double dot(p p1, p p2){
 	return p1.X*p2.X + p1.Y*p2.Y;
   }
-
   //p1とp2の外積
   double det(p p1, p p2){
 	return p1.X*p2.Y - p2.X*p1.Y;
   }
-
   //3点が一直線上だったら三角形ではない
   bool isTriangle(){
 	double t = det(a - c, b - c);
 	return abs(t) < EPS? false : true;
   }
-
   //余弦定理からcosを求める関数
   double LawOfCosines(double a,double b, double c){
 	return (b*b+c*c-a*a) / (2.0*b*c);
@@ -107,7 +101,6 @@ public:
   double getCosine(p p1, p p2){
 	return dot(p1, p2) / (abs(p1)*abs(p2));
   }
-
   //double circumscribedCircleRadius(){//外接円の半径を返す
   double getCR(){
 	return ( bc / (2*sinA));
@@ -121,12 +114,10 @@ public:
 	int a2 = 2*(c.X-a.X);
 	int b2 = 2*(c.Y-a.Y);
 	int c2 = a.X*a.X - c.X*c.X + a.Y*a.Y - c.Y*c.Y;
-
 	double x = (b1*c2 - b2*c1)*1.0 / (a1*b2 - a2*b1);
 	double y = (c1*a2 - c2*a1)*1.0 / (a1*b2 - a2*b1);
 	return p(x, y);
   }
-
   //http://www004.upp.so-net.ne.jp/s_honma/urawaza/area2.htm
   double getArea(){
 	double s = 0;
@@ -139,25 +130,25 @@ public:
 
 // 円クラス
 class Circle{
-
 private:
   //中心座標
   p c;
   //半径
   double r;
-
 public:
   //コンストラクタ(3つの点と辺と角度を初期化)
   Circle(p center, double radius){
 	c = center;
 	r = radius;
   }
-
   //aは円の領域内（線上含む）か？
   bool inRegion(p a){
 	return (a.X-c.X)*(a.X-c.X)+(a.Y-c.Y)*(a.Y-c.Y) <= r*r + EPS? true : false;
   }
 };
+
+
+
 
 //二次元座標(from 蟻本)
 typedef struct _PT{
@@ -183,17 +174,18 @@ typedef struct _PT{
   double dist(_PT p){ //pとの距離の2乗
 	return (x-p.x)*(x-p.x) + (y-p.y)*(y-p.y);
   }
+  double abs(){
+	return sqrt(norm());
+  }
   double norm(){
 	return x*x + y*y;
   }
-
   bool operator <(const struct _PT &e) const{
     return x == e.x? (y < e.y) : x < e.x;
   }
   bool operator >(const struct _PT &e) const{
     return x == e.x? (y > e.y) : x > e.x;
   }
-
 } pt;
 // 線分p1-p2上に点qがあるか判定
 bool on_seg(pt p1, pt p2, pt q){
@@ -217,12 +209,41 @@ double pdet(pt p1, pt p2){ //pとの外積
 	return p1.x * p2.y - p1.x * p2.y;
 }
 
+// 線分クラス
+typedef struct _LINE{
+  pt a, b;
+  _LINE(){}
+  _LINE(pt x, pt y) : a(x), b(y){
+  }
+} line;
+// http://tomiflu.hatenablog.com/entry/20121209/1355063106
+// 2直線の交差判定
+bool intersectLL(line &l, line &m) {
+  return abs((l.b - l.a).det( m.b - m.a)) > EPS || // 平行ではない
+	abs((l.b - l.a).det(m.a - l.a)) < EPS; // 同一直線上(オーバーラップ)
+}
+// 直線と線分の交差判定
+bool intersectLS(line &l, line &s) {
+  return (l.b - l.a).det(s.a - l.a) * // s.aはlの左側
+	(l.b - l.a).det(s.b - l.a) < EPS; // s.bはlの右側
+}
+// 直線と点の交差判定
+bool intersectLP(line &l, pt &p) {
+  return abs((l.b - p).det(l.a - p)) < EPS;
+}
+// 2線分の交差判定
+bool intersectSS(const line &s, const line &t) {
+    return ccw(s.a, s.b, t.a)*ccw(s.a,s.b,t.b) <= 0 &&
+        ccw(t.a,t.b,s.a)*ccw(t.a,t.b,s.b) <= 0;
+}
+// 線分と点の交差判定
+bool intersectSP(line &s, pt &p) {
+  return (s.a - p).abs() + (s.b - p).abs() - (s.b - s.a).abs() < EPS; // 三角不等式
+}
 
 
 class Polygon{
-
 private:
-
 public:
   vector<pt> pts;
   int n;
@@ -249,15 +270,13 @@ public:
 	pts = qs;
 	return qs;
   }
-
   //点が図形を構成する順番に並んでないと駄目。並んでなければconvex_hullで矯正してから
-   double getArea(){
+  double getArea(){
 	double s = 0;
 	rep(i, 0, n-1) s += pts[i].det(pts[i+1]);
 	s += pts[n-1].det(pts[0]);
 	return fabs(s) * 0.5;
-   }
-
+  }
   //http://www004.upp.so-net.ne.jp/s_honma/urawaza/area2.htm
   double _getArea(){
 	double s = 0;
@@ -265,7 +284,6 @@ public:
 	s += (pts[n-1].x - pts[0].x) *( pts[n-1].y + pts[0].y);
 	return fabs(s) * 0.5;
   }
-
   //http://imagingsolution.net/math/calc_n_point_area/
   //点が時計回りか反時計回りに並んでないと駄目
   double getArea2(){
@@ -274,9 +292,40 @@ public:
 	s += pts[n-1].x * pts[0].y + pts[0].x * pts[n-1].y;
 	return fabs(s) * 0.5;
   }
-
+  //キャリパー法で最遠点対を求める。要convex_hull
+  double maxDist(){
+	vector<pt> qs = pts;
+	double res = 0;
+	if(n == 2) return qs[0].dist(qs[1]);
+	int i = 0, j = 0;
+	rep(k, 0, n){
+	  if(qs[i] > qs[k]) i = k;
+	  if(qs[j] < qs[k]) j = k;
+	}
+	int si = i, sj = j;
+	while(i != sj || j != si){
+	  res = fmax(res, qs[i].dist(qs[j]));
+	  if((qs[(i+1) % n] - qs[i]).det(qs[(j+1) % n] - qs[j]) < 0) i = (i + 1) % n;
+	  else j = (j + 1) % n;
+	}
+	return res;
+  }
 };
 
+
+// http://judge.u-aizu.ac.jp/onlinejudge/cdescription.jsp?cid=ACAC003&pid=B
+void acac003_b(){
+  int q, x1, x2, x3, x4, y1, y2, y3, y4;
+  line s1, s2;
+  cin >> q;
+  rep(i, 0, q){
+	cin >> x1 >> y1 >> x2 >> y2 >> x3 >> y3 >> x4 >> y4;
+	s1 = line(pt(x1, y1), pt(x2, y2));
+	s2 = line(pt(x3, y3), pt(x4, y4));
+	cout << intersectSS(s1, s2) << endl;
+  }
+
+}
 
 
 //AOJ0010
@@ -311,9 +360,25 @@ void area_test(){
 
 }
 
-void doIt(){
+void doIt2(){
   Triangle t = Triangle(p(0, 1), p(1, 2), p(2, 3));
   cout << t.isTriangle() << endl;
+}
+
+// http://judge.u-aizu.ac.jp/onlinejudge/cdescription.jsp?cid=ACAC002&pid=C
+void doIt(){
+  int n;
+  vector<pt> v;
+  double x, y;
+  Polygon pl;
+  cin >> n;
+  rep(i, 0, n){
+	cin >> x >> y;
+	v.push_back(pt(x, y));
+  }
+  pl = Polygon(v);
+  pl.convex_hull();
+  printf("%.9f\n", pl.maxDist());
 }
 
 int main() {

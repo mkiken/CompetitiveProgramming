@@ -39,26 +39,12 @@ const double EPS = 1e-10;
 //const int dy[] = {0, 0, 1, -1, -1, -1, 1, 1};
 //const int weight[] = {0,1,10,100,1000,10000,100000,1000000,10000000};
 //priority_queue<int, vector<int>, greater<int>> q;
-typedef struct _Node {
-  _Node(int arg1 = 0, int arg2 = 0 , int arg3 = 0) {
-	i = arg1;
-	j = arg2;
-	k = arg3;
-  }
-  int i,j,k;
-  bool operator <(const struct _Node &e) const{
-    return i == e.i? j < e.j : i < e.i;
-  }
-  bool operator >(const struct _Node &e) const{
-    return i == e.i? j > e.j : i > e.i;
-  }
-}node;
 
 //calculate (a*b)%m
 //http://discuss.codechef.com/questions/9723/witmath-editorial
 ull bigMul(ull a, ull b, ull m){
 	int base = (int)1e9;
-	ull a_low = a % base, a_high = a / base, b_low = b % base, b_high = b / base, result; 
+	ull a_low = a % base, a_high = a / base, b_low = b % base, b_high = b / base, result;
 	result = (a_high * b_high) % m;
 	rep(i, 0, 9) result = (result * 10) % m;
 	result = (result + a_low*b_high + b_low*a_high) % m;
@@ -104,32 +90,32 @@ bool MillerRabin(ull n) {
   return true;
 }
 
-void doIt(){
-  const int MAX_N = 10002;
-  bool bPrimes[MAX_N];
-  vector<int> primes;
+#define MAX_PRIMES 10002
+bool bPrimes[MAX_PRIMES];
+vector<int> primes;
+
+void makePrimes(){
   afill(bPrimes, true);
   bPrimes[0] = bPrimes[1] = false;
-  rep(i, 2, MAX_N){
+  rep(i, 2, MAX_PRIMES){
 	if(bPrimes[i]){
 	  primes.push_back(i);
-	  for(int j = 2*i; j < MAX_N; j += i) bPrimes[j] = false;
+	  for(int j = 2*i; j < MAX_PRIMES; j += i) bPrimes[j] = false;
 	}
   }
 }
 
 //偶数は無視する
-void doIt2(){
-  const int MAX_N = 10002;
-  bool bPrimes[MAX_N];
+void makePrimes2(){
+  bool bPrimes[MAX_PRIMES];
   vector<int> primes;
   afill(bPrimes, true);
   bPrimes[0] = bPrimes[1] = false;
   primes.push_back(2);
-  for(int i = 3; i < MAX_N; i += 2){
+  for(int i = 3; i < MAX_PRIMES; i += 2){
 	if(bPrimes[i]){
 	  primes.push_back(i);
-	  for(int j = 3*i; j < MAX_N; j += 2*i) bPrimes[j] = false;
+	  for(int j = 3*i; j < MAX_PRIMES; j += 2*i) bPrimes[j] = false;
 	}
   }
   cout << primes.size() << endl;
