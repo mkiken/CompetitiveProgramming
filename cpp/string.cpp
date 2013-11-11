@@ -47,11 +47,31 @@ vector<string> split( string s, string c )
 }
 
 // http://oshiete.goo.ne.jp/qa/542967.html
-string i2b(unsigned long n) {
-  return bitset<32>(n).to_string<char,char_traits<char>,allocator<char> >();
+// string i2b(unsigned long n) {
+//   return bitset<32>(n).to_string<char,char_traits<char>,allocator<char> >();
+// }
+// unsigned long b2i(const string& s) {
+//   return bitset<32>(s).to_ulong();
+// }
+
+// http://d.hatena.ne.jp/kobapan/20090208/1281901941
+ull b2i (const string &s) {
+    ull out = 0;
+    for (int i = 0; i < s.size(); ++i ) {
+        out *= 2;
+        out += (s[i] == '1') ? 1 : 0;
+    }
+    return out;
 }
-unsigned long b2i(const string& s) {
-  return bitset<32>(s).to_ulong();
+string i2b(ull x) {
+  string c;
+  while(x){
+	if(x & 1) c += '1';
+	else c += '0';
+	x >>= 1;
+  }
+  reverse(c.begin(), c.end());
+  return c;
 }
 
 //int to string
