@@ -18,7 +18,9 @@ using namespace std;
 
 #define len(array)  (sizeof (array) / sizeof *(array))
 #define rep(i, s, e) for(int i = s;i < e;i++)
+#define Rep(i, e) for(int i = 0;i < e;i++)
 #define rrep(i, e, s) for(int i = e;s <= i;i--)
+#define Rrep(i, e) for(int i = e;0 <= i;i--)
 #define vrange(v) v.begin(), v.end()
 #define vrrange(v) v.rbegin(), v.rend()
 #define vsort(v) sort(vrange(v))
@@ -31,6 +33,8 @@ using namespace std;
 #define fmax(a, b) (a < b? b : a)
 #define fmin(a, b) (a > b? b : a)
 #define fabs(a) (a < 0? -a : a)
+#define pb push_back
+#define rg(i, s, t) s <= i && i < t
 //#define X real()
 //#define Y imag()
 //typedef unsigned int ui;

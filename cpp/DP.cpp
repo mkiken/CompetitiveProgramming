@@ -49,33 +49,35 @@ const double EPS = 1e-10;
 //const int dy[] = {0, 0, 1, -1, -1, -1, 1, 1};
 //const int weight[] = {0,1,10,100,1000,10000,100000,1000000,10000000};
 //priority_queue< int, vector<int>, greater<int> > q;
-#define MAX_N 16
+#define MAX_N 500 + 5
 
-void doIt(){
-  int n, e, dist[MAX_N][MAX_N], dp[1 << MAX_N][MAX_N];
-  cin >> n;
-  rep(i, 0, n){
-	rep(j, i+1, n){
-	  cin >> e;
-	  dist[i][j] = dist[j][i] = e;
-	}
-  }
-  afill2(dp, INF, int);
-  dp[(1 << n) - 1][0] = 0;
-  Rrep(S, (1 << n) - 2){
-	rep(v, 0, n){
-	  rep(u, 0, n){
-		if(!(S >> u & 1)){
-		  dp[S][v] = min(dp[S][v], dp[S | 1 << u][u] + dist[v][u]);
+// 編集距離を求める
+// http://d.hatena.ne.jp/ohnishiakira/20090809/1249845529
+int LevenshteinDistance(string str1, string str2){
+	int lenstr1 = str1.length() + 1, lenstr2 = str2.length() + 1, cost = 0;
+	int d[lenstr1][lenstr2];
+	Rep(i1, lenstr1) d[i1][0] = i1;
+	Rep(i2, lenstr2) d[0][i2] = i2;
+	rep(i1, 1, lenstr1){
+		rep(i2, 1, lenstr2){
+			cost = str1[i1 - 1] == str2[i2 - 1] ? 0 : 1;
+			d[i1][i2] = min(d[i1 - 1][i2] + 1, min(d[i1][i2 - 1] + 1, d[i1 - 1][i2 - 1] + cost));
 		}
-	  }
 	}
-  }
-  if(n == 2) cout << 0 << " " << 0 << endl;
-  else cout << n << " " << dp[0][0] << endl;
+	return d[lenstr1 - 1][lenstr2 - 1];
 }
 
-// http://maximum-cup-2013.contest.atcoder.jp/tasks/maximum_2013_a
+// http://www.codechef.com/ODCD2013/problems/LEMAGIK
+void doIt(){
+	int t;
+	string a, b;
+	cin >> t;
+	while(t--){
+		cin >> a >> b;
+		cout << LevenshteinDistance(a, b) << endl;
+	}
+}
+
 int main() {
   doIt();
   return 0;

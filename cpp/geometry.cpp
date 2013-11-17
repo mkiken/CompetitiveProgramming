@@ -240,6 +240,43 @@ bool intersectSS(const line &s, const line &t) {
 bool intersectSP(line &s, pt &p) {
   return (s.a - p).abs() + (s.b - p).abs() - (s.b - s.a).abs() < EPS; // 三角不等式
 }
+//http://www.prefield.com/algorithm/geometry/distance.html
+pt projection(line &l, pt &p) {
+  double t = (p-l.a).dot(l.a-l.b) / (l.a-l.b).norm();
+  return l.a + (l.a - l.b)*t;
+}
+pt reflection(line &l, pt &p) {
+  return p + ((projection(l, p) - p) * 2);
+}
+double distanceLP(line &l, pt &p) {
+  return (p - projection(l, p)).abs();
+}
+double distanceLL(line &l, line &m) {
+  return intersectLL(l, m) ? 0 : distanceLP(l, m.a);
+}
+double distanceLS(line &l, line &s) {
+  if (intersectLS(l, s)) return 0;
+  return min(distanceLP(l, s.a), distanceLP(l, s.b));
+}
+//線分と点の距離
+double distanceSP(line &s, pt &p) {
+  pt r = projection(s, p);
+  if (intersectSP(s, r)) return (r - p).abs();
+  return fmin((s.a - p).abs(), (s.b - p).abs());
+}
+double distanceSS(line &s, line &t) {
+  if (intersectSS(s, t)) return 0;
+  return min(min(distanceSP(s, t.a), distanceSP(s, t.b)),
+             min(distanceSP(t, s.a), distanceSP(t, s.b)));
+}
+//二直線の交点
+pt crosspoint(line &l, line &m) {
+  double A = (l.b - l.a).det(m.b - m.a);
+  double B = (l.b - l.a).det(l.b - m.a);
+  if (abs(A) < EPS && abs(B) < EPS) return m.a; // same line
+  // if (abs(A) < EPS) assert(false); // !!!PRECONDITION NOT SATISFIED!!!
+  return m.a + (m.b - m.a) * (B/A);
+}
 
 
 class Polygon{
