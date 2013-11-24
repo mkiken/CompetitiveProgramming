@@ -128,8 +128,9 @@ int perm(int n, int k, int m){
 //nCk mod m
 int comb(int n, int k, int m){
   ll l = 1, c = 1;
+  if(n < k) return 0;
   if(n - k < k) k = n - k;
-  rep(i, 0, k - 1){
+  rep(i, 0, k){
 	l = (l * (n - i)) % m;
 	c = (c * (k - i)) % m;
   }
@@ -158,7 +159,7 @@ ull bigMul(ull a, ull b, int m){
 
 
 void doIt(){
-    //cout << pow(2, 400, MOD) << endl;
+    cout << comb(10, 10, MOD) << endl;
 }
 
 int main() {
