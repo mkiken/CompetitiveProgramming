@@ -51,6 +51,18 @@ const double EPS = 1e-10;
 //priority_queue< int, vector<int>, greater<int> > q;
 #define MAX_N 16
 
+//http://www.mwsoft.jp/programming/java/java_lang_integer_bit_count.html
+int bitcount(int i){
+  i = i - ((i >> 1) & 0x55555555);
+  i = (i & 0x33333333) + ((i >> 2) & 0x33333333);
+  i = (i + (i >> 4)) & 0x0f0f0f0f;
+  i = i + (i >> 8);
+  i = i + (i >> 16);
+  return i & 0x3f;
+}
+
+
+
 void doIt(){
   int n, e, dist[MAX_N][MAX_N], dp[1 << MAX_N][MAX_N];
   cin >> n;
