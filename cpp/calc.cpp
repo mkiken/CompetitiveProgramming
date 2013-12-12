@@ -79,12 +79,12 @@ template <typename T> T fpow(T n, T p){
 }
 
 //n**p % m
-int powMod(int n, int p, int m){
+int powMod(int n, int p){
   ll ans = 1, ln = n;
   if(p <= 0) return 1;
   while(p != 0){
-	if((p & 1) == 1) ans = (ans*ln) % m;
-	ln = (ln * ln) % m;
+	if((p & 1) == 1) ans = (ans*ln) % MOD;
+	ln = (ln * ln) % MOD;
 	p = p >> 1;
   }
   return (int)ans;
@@ -105,16 +105,16 @@ int extgcd(int a, int b, int &x, int &y) {
 }
 
 // 1/a mod m
-int mod_inverse(int a, int m){
+int mod_inverse(int a){
   int x, y;
-  extgcd(a, m, x, y);
-  return (m + x % m) % m;
+  extgcd(a, MOD, x, y);
+  return (MOD + x % MOD) % MOD;
 }
 
 //n! mod m
-int fact(int n, int m){
+int fact(int n){
   ll ret = 1;
-  rep(i, 2, n+1) ret = (ret * i) % m;
+  rep(i, 2, n+1) ret = (ret * i) % MOD;
   return (int)ret;
 }
 
@@ -126,7 +126,62 @@ int perm(int n, int k, int m){
 }
 
 //nCk mod m
-int comb(int n, int k, int m){
+int comb(int n, int k){
+  ll l = 1, c = 1;
+  if(n < k) return 0;
+  if(n - k < k) k = n - k;
+  rep(i, 0, k){
+	l = (l * (n - i)) % MOD;
+	c = (c * (k - i)) % MOD;
+  }
+  return (int)((l * mod_inverse(c)) % MOD);
+}
+
+//n!/(a[0]!a[1]!..a[a.size()-1]!) mod m
+int rep_perm(int n, vector<int> a){
+  ll ret = fact(n), pdt = 1;
+  rep(i, 0, a.size()) pdt = (pdt * fact(a[i])) % MOD;
+  return (int)((ret * mod_inverse(pdt)) % MOD);
+}
+
+
+//modを引数にとるバージョン
+
+//n**p % m
+int _powMod(int n, int p, int m){
+  ll ans = 1, ln = n;
+  if(p <= 0) return 1;
+  while(p != 0){
+	if((p & 1) == 1) ans = (ans*ln) % m;
+	ln = (ln * ln) % m;
+	p = p >> 1;
+  }
+  return (int)ans;
+}
+
+// 1/a mod m
+int _mod_inverse(int a, int m){
+  int x, y;
+  extgcd(a, m, x, y);
+  return (m + x % m) % m;
+}
+
+//n! mod m
+int _fact(int n, int m){
+  ll ret = 1;
+  rep(i, 2, n+1) ret = (ret * i) % m;
+  return (int)ret;
+}
+
+//nPk mod m
+int _perm(int n, int k, int m){
+  ll ret = 1;
+  rep(i, n-k+1, n+1) ret = (ret * i) % m;
+  return (int)ret;
+}
+
+//nCk mod m
+int _comb(int n, int k, int m){
   ll l = 1, c = 1;
   if(n < k) return 0;
   if(n - k < k) k = n - k;
@@ -134,19 +189,19 @@ int comb(int n, int k, int m){
 	l = (l * (n - i)) % m;
 	c = (c * (k - i)) % m;
   }
-  return (int)((l * mod_inverse(c, m)) % m);
+  return (int)((l * _mod_inverse(c, m)) % m);
 }
 
 //n!/(a[0]!a[1]!..a[a.size()-1]!) mod m
-int rep_perm(int n, vector<int> a, int m){
-  ll ret = fact(n, m), pdt = 1;
-  rep(i, 0, a.size()) pdt = (pdt * fact(a[i], m)) % m;
-  return (int)((ret * mod_inverse(pdt, m)) % m);
+int _rep_perm(int n, vector<int> a, int m){
+  ll ret = _fact(n, m), pdt = 1;
+  rep(i, 0, a.size()) pdt = (pdt * _fact(a[i], m)) % m;
+  return (int)((ret * _mod_inverse(pdt, m)) % m);
 }
 
 //calculate (a*b)%m
 //http://discuss.codechef.com/questions/9723/witmath-editorial
-ull bigMul(ull a, ull b, int m){
+ull _bigMul(ull a, ull b, int m){
 	int base = (int)1e9;
 	ull a_low = a % base, a_high = a / base, b_low = b % base, b_high = b / base, result;
 	result = (a_high * b_high) % m;
@@ -157,9 +212,8 @@ ull bigMul(ull a, ull b, int m){
 	return result;
 }
 
-
 void doIt(){
-    cout << comb(10, 10, MOD) << endl;
+    cout << _comb(10, 10, MOD) << endl;
 }
 
 int main() {
