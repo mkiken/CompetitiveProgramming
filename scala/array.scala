@@ -1,5 +1,34 @@
 import java.util.Scanner
 
+// http://www.codechef.com/FEB14/problems/COLARR
+// TLE...
+object Main{
+  def main(args: Array[String]){
+    doIt();
+  }
+  def doIt(){
+    val sc = new Scanner(System.in);
+    val t = sc.nextInt();
+    for(ii <- 0 until t){
+      val n, m, k = sc.nextInt();
+      val A = Array.fill(n)(sc.nextInt());
+      val B, C = Array.fill(n)(Array.fill(m)(sc.nextInt()));
+      val grd = new Array[Int](n);
+      var value = 0;
+      for(i <- 0 until n){
+        var max = 0;
+        for(j <- 0 until m){
+          max = Math.max(max, B(i)(j) - C(i)(j) - B(i)(A(i)-1));
+        }
+        grd(i) = max;
+        value += B(i)(A(i)-1);
+      }
+      println(value + grd.sorted.reverse.take(k).sum);
+    }
+  }
+
+}
+
 object Euler18 {
   def main(args: Array[String]){
     // val ar = Array.fill(n)(sc.nextInt());
