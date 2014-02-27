@@ -42,13 +42,12 @@ const int INF = (int)1e9;
 const int MOD = (int)1e9 + 7;
 const double EPS = 1e-10;
 
+#define MAX_N 1000
 
-
-double combi[1001][1001]; //aCb = combi[a][b]
-int MAX_N = 1000;
+double combi[MAX_N+2][MAX_N+2]; //aCb = combi[a][b]
 void makeCombi(){
-  afill2(combi, 0, double);
   rep(i, 0, MAX_N+1) combi[i][0] = 1;
+  rep(i, 1, MAX_N+1) combi[0][i] = 0;
   rep(i, 1, MAX_N+1){
 	rep(j, 1, i+1) combi[i][j] = combi[i-1][j-1] + combi[i-1][j];
   }
@@ -97,6 +96,7 @@ int gcd(int a, int b) {
 int lcm(int a, int b) {
   return a * b / gcd(a, b);
 }
+
 // a x + b y = gcd(a, b)
 int extgcd(int a, int b, int &x, int &y) {
   int g = a; x = 1; y = 0;
@@ -109,6 +109,44 @@ int mod_inverse(int a){
   int x, y;
   extgcd(a, MOD, x, y);
   return (MOD + x % MOD) % MOD;
+}
+
+#define MAX_INV 1000000
+ll inv[MAX_INV + 5];
+void makeInv(int n){
+  rep(i, 1, n + 1){
+    inv[i] = mod_inverse(i);
+  }
+}
+
+#define MAX_FACT 1000000
+ll facts[MAX_FACT + 5];
+void makeFacts(int n){
+  facts[0] = 1;
+  rep(i, 1, n + 1){
+    facts[i] = i * facts[i-1] % MOD;
+  }
+}
+
+int fcomb(int n, int k){
+  ll l = 1, c = 1, ans;
+  if(n < k) return 0;
+  if(n - k < k) k = n - k;
+  ans = facts[n];
+  ans = ans * mod_inverse(facts[k]) % MOD;
+  ans = ans * mod_inverse(facts[n - k]) % MOD;
+  return (int)ans;
+}
+
+//InvがMAX_N内に収まるならこっちの方が速い
+int _fcomb(int n, int k){
+  ll l = 1, c = 1, ans;
+  if(n < k) return 0;
+  if(n - k < k) k = n - k;
+  ans = facts[n];
+  ans = ans * inv[facts[k]] % MOD;
+  ans = ans * inv[facts[n - k]] % MOD;
+  return (int)ans;
 }
 
 //n! mod m
@@ -137,11 +175,21 @@ int comb(int n, int k){
   return (int)((l * mod_inverse(c)) % MOD);
 }
 
+int rep_comb(int n, int k){
+  return comb(n+k-1, k);
+}
+
 //n!/(a[0]!a[1]!..a[a.size()-1]!) mod m
 int rep_perm(int n, vector<int> a){
   ll ret = fact(n), pdt = 1;
   rep(i, 0, a.size()) pdt = (pdt * fact(a[i])) % MOD;
   return (int)((ret * mod_inverse(pdt)) % MOD);
+}
+
+//区別のつかないn個のものを区別のつくk個に組み分け
+// http://www.minemura.org/juken/kumiwake.html
+int group(int n, int k){
+  return comb(n+k-1, k-1);
 }
 
 

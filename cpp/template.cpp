@@ -21,6 +21,7 @@ using namespace std;
 #define Rep(i, e) for(int i = 0;i < e;i++)
 #define rrep(i, e, s) for(int i = e;s <= i;i--)
 #define Rrep(i, e) for(int i = e;0 <= i;i--)
+#define mrep(i, e, t1, t2) for(map<t1, t2>::iterator i = e.begin(); i != e.end(); i++)
 #define vrange(v) v.begin(), v.end()
 #define vrrange(v) v.rbegin(), v.rend()
 #define vsort(v) sort(vrange(v))
