@@ -48,13 +48,73 @@ const int MOD = (int)1e9 + 7;
 const double EPS = 1e-10;
 //const int dx[] = {1, -1, 0, 0, 1, -1, -1, 1};
 //const int dy[] = {0, 0, 1, -1, -1, -1, 1, 1};
-//const ll weight[] = {1e0,1e1,1e2,1e3,1e4,1e5,1e6,1e7,1e8,1e9,1e10,1e11,1e12,1e13};
+const ll weight[] = {1e0,1e1,1e2,1e3,1e4,1e5,1e6,1e7,1e8,1e9,1e10,1e11,1e12,1e13};
 //priority_queue< int, vector<int>, greater<int> > q;
 #define MAX_N 1000
+#define log2 0.30102999566398119521373889472449L
+// const double log2 = log10(2);
 
-void doIt(){
+ll getFirstK(int n, int k){
+  long double log = log2 * (n - 1);
+  // double log = log2 * (n - 1);
+  log -= (ll)log;
+  // printf("log = %f\n", log);
+  long double p = powl(10, log);
+  // printf("pow = %f\n", p);
+  // while(p < weight[k-1]){
+  //   p *= 10;
+  // }
+  p *= powl(10, k-1);
+  // printf("pow = %f\n", p);
+  return (ll)p;
 }
 
+ll _powMod(int n, int p, int m){
+  ll ans = 1, ln = n;
+  if(p <= 0) return 1;
+  while(p != 0){
+	if((p & 1) == 1) ans = (ans*ln) % m;
+	ln = (ln * ln) % m;
+	p = p >> 1;
+  }
+  return ans;
+}
+
+ll getLastK(int n, int k){
+  ll mod = pow(10, k);
+  return _powMod(2, n-1, mod);
+}
+
+long long int lastkdigit(long long int K , long long int MOD)
+{
+    if(K==1) return 2;
+    else if(K%2==0)
+        {
+            long long int temp = lastkdigit(K/2 , MOD);
+            return (temp*temp)%MOD;
+        }
+     else
+        {
+            long long int temp = lastkdigit(K/2 , MOD);
+            return (2*temp*temp)%MOD;
+        }
+}
+
+void doIt(){
+  int t, n, k;
+  // printf("log2 = %.20Lf\n", log2);
+  cin >> t;
+  while(t--){
+    cin >> n >> k;
+    ll fst = getFirstK(n, k), lst = getLastK(n, k);
+    // printf("fast = %lld\n", fst);
+    // printf("lst = %lld\n", lst);
+    // printf("lst2 = %lld\n", lastkdigit(n-1, weight[k]));
+    printf("%lld\n", fst + lst);
+  }
+}
+
+// https://www.hackerrank.com/blog/july-2020-editorial-journey-to-mars
 int main() {
   doIt();
   return 0;
