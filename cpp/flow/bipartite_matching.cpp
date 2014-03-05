@@ -66,7 +66,7 @@ bool dfs(int v){
   used[v] = true;
   rep(i, 0, G[v].size()){
 	int u = G[v][i], w = match[u];
-	if(w < 0 || !used[w] && dfs(w)){
+	if(w < 0 || (!used[w] && dfs(w))){
 	  match[u] = v;
 	  match[v] = u;
 	  return true;
