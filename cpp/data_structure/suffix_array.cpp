@@ -112,7 +112,6 @@ int lcp(int x, int y, int stp)
 //結果はsuffixに格納．
 int getSuffixArray(string str){
   int idx = makeSuffixArray(str);
-  vector<P> v;
   Rep(i, N){
     suffix[SA[idx][i]] = i;
   }

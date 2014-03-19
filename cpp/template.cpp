@@ -18,9 +18,9 @@
 using namespace std;
 
 #define len(array)  (sizeof (array) / sizeof *(array))
-#define rep(i, s, e) for(int i = s;i < e;i++)
-#define Rep(i, e) for(int i = 0;i < e;i++)
-#define rrep(i, e, s) for(int i = e;s <= i;i--)
+#define rep(i, s, e) for(int i = (s);i < (e);i++)
+#define Rep(i, e) for(int i = 0;i < (e);i++)
+#define rrep(i, e, s) for(int i = (e);(s) <= i;i--)
 #define Rrep(i, e) for(int i = e;0 <= i;i--)
 #define mrep(i, e, t1, t2) for(map<t1, t2>::iterator i = e.begin(); i != e.end(); i++)
 #define vrange(v) v.begin(), v.end()
@@ -31,18 +31,19 @@ using namespace std;
 #define asort(a) sort(arange(a))
 #define arsort(a, t) sort(arange(a), greater<t>())
 #define afill(a, v) fill(arange(a), v)
-#define afill2(a, v, t) fill((t *)a, (t *)(a + len(a)), v)
-#define fmax(a, b) (a < b? b : a)
-#define fmin(a, b) (a > b? b : a)
-#define fabs(a) (a < 0? -a : a)
+#define afill2(a, v, t) fill((t *)(a), (t *)((a) + len(a)), v)
+#define fmax(a, b) ((a) < (b)? (b) : (a))
+#define fmin(a, b) ((a) > (b)? (b) : (a))
+#define fabs(a) ((a) < 0? -(a) : (a))
 #define pb push_back
-#define rg(i, s, t) s <= i && i < t
+#define rg(e, s, t) s <= e && e < t
+#define PQDecl(name, tp) priority_queue< tp, vector<tp>, greater<tp> > name;
 //#define X real()
 //#define Y imag()
 //typedef unsigned int ui;
 typedef long long ll;
 typedef unsigned long long ull;
-typedef pair<int, int> P;
+typedef pair<ll, ll> P;
 //typedef complex<double> p;
 const int INF = (int)2e9;
 const int MOD = (int)1e9 + 7;
@@ -50,7 +51,6 @@ const double EPS = 1e-10;
 //const int dx[] = {1, -1, 0, 0, 1, -1, -1, 1};
 //const int dy[] = {0, 0, 1, -1, -1, -1, 1, 1};
 //const ll weight[] = {1e0,1e1,1e2,1e3,1e4,1e5,1e6,1e7,1e8,1e9,1e10,1e11,1e12,1e13};
-//priority_queue< int, vector<int>, greater<int> > q;
 #define MAX_N 1000
 
 void doIt(){
