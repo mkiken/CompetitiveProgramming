@@ -66,13 +66,24 @@ ull bigPowMod(ull n, ull p, ull m){
   return ans;
 }
 
+int _powMod(int n, int p, int m){
+  ll ans = 1, ln = n;
+  if(p <= 0) return 1;
+  while(p != 0){
+	if((p & 1) == 1) ans = (ans*ln) % m;
+	ln = (ln * ln) % m;
+	p = p >> 1;
+  }
+  return (int)ans;
+}
 bool suspect(int a, int s, ull d, ull n) {
-  ull x = bigPowMod(a, d, n);
+  // ull x = bigPowMod(a, d, n);
+  ull x = _powMod(a, d, n);
   if (x == 1) return true;
   for (int r = 0; r < s; ++r) {
     if (x == n - 1) return true;
-    //x = x * x % n;
-	x = bigMul(x, x, n);
+    x = x * x % n;
+	// x = bigMul(x, x, n);
   }
   return false;
 }

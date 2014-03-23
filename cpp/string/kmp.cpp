@@ -38,7 +38,6 @@ using namespace std;
 #define pb push_back
 #define rg(e, s, t) s <= e && e < t
 #define PQDecl(name, tp) priority_queue< tp, vector<tp>, greater<tp> > name;
-#define sz(v) ((int)(v).size());
 //#define X real()
 //#define Y imag()
 //typedef unsigned int ui;
@@ -54,7 +53,66 @@ const double EPS = 1e-10;
 //const ll weight[] = {1e0,1e1,1e2,1e3,1e4,1e5,1e6,1e7,1e8,1e9,1e10,1e11,1e12,1e13};
 #define MAX_N 1000
 
+//Knuth–Morris–Pratt algorithm
+//文字列Sから単語Wを探す
+//O(|S| + |W|)
+
+//http://ankitsjain22.wordpress.com/2013/07/17/kmp-algorithm-c-code/
+// int v[2002];
+// void table(string p) {
+//     //v[i] :where to go(what to compare next) if mismatch occur at i
+//     v[0]=0;  //obviously we ll stay at zero only even if its a mismatch
+//     v[1]=0;  //just think naturally where will u go if mismatch occur at 1
+//     int cur=0;
+//     for(int j=2;j<p.size();j++){
+//         while(cur!=0 && p[cur]!=p[j-1])
+//         cur=v[cur];
+//         if(p[cur]==p[j-1]) cur=cur+1;
+//         v[j]=cur;
+//     }
+// }
+// bool kmp(string p,string text) {
+//     table(p);
+//     int cur=0; //cur: All locations before cur have been matched.
+//     for(int j=0;j<text.size();j++) {
+//         while(cur>0 && p[cur]!=text[j]) cur=v[cur];
+//         if(p[cur]==text[j])
+//             if(++cur==p.size()) return true;
+//     }
+//     return false;
+// }
+
+// http://www.prefield.com/algorithm/string/knuth_morris_pratt.html
+int *buildFail(string p) {
+  int m = p.length();
+  int *fail = new int[m+1];
+  int j = fail[0] = -1;
+  for (int i = 1; i <= m; ++i) {
+    while (j >= 0 && p[j] != p[i-1]) j = fail[j];
+    fail[i] = ++j;
+  }
+  return fail;
+}
+int match(string t, string p, int *fail) {
+  int n = t.length(), m = p.length();
+  int count = 0;
+  for (int i = 0, k = 0; i < n; ++i) {
+    while (k >= 0 && p[k] != t[i]) k = fail[k];
+    if (++k >= m) {
+      ++count; // match at t[i-m+1 .. i]
+      k = fail[k];
+    }
+  }
+  return count;
+}
+
+int kmp(string t, string p){
+  return match(t, p, buildFail(p));
+}
+
 void doIt(){
+  string t = "ababac", p = "ab";
+  printf("kmp(%s, %s) = %d\n", t.c_str(), p.c_str(), kmp(t, p));
 }
 
 int main() {
