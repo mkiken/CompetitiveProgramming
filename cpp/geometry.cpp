@@ -126,6 +126,24 @@ public:
 	s += (c.X - a.X) * (c.Y + a.Y);
 	return fabs(s) * 0.5;
   }
+  //http://www.blackpawn.com/texts/pointinpoly/
+  //線分abから見てp1, p2は同じ方向にあるか？
+  bool SameSide(p p1, p p2, p a, p b){
+    p cp1 = det(b-a, p1-a);
+    p cp2 = det(b-a, p2-a);
+    if (dot(cp1, cp2) >= 0) return true;
+    else return false;
+  }
+  //点p0がa, b, cからなる三角形の内部にあるか？
+  bool _PointInTriangle(p p0, p a, p b, p c){
+    if (SameSide(p0,a, b,c) && SameSide(p0,b, a,c)
+        && SameSide(p0,c, a,b)) return true;
+    else return false;
+  }
+  bool PointInTriangle(p p0){
+    return _PointInTriangle(p0, a, b, c);
+  }
+
 };
 
 // 円クラス

@@ -44,12 +44,21 @@ const double EPS = 1e-10;
 
 #define MAX_N 1000
 
-double combi[MAX_N+2][MAX_N+2]; //aCb = combi[a][b]
+double _combi[MAX_N+2][MAX_N+2]; //aCb = _combi[a][b]
 void makeCombi(){
+  rep(i, 0, MAX_N+1) _combi[i][0] = 1;
+  rep(i, 1, MAX_N+1) _combi[0][i] = 0;
+  rep(i, 1, MAX_N+1){
+	rep(j, 1, i+1) _combi[i][j] = _combi[i-1][j-1] + _combi[i-1][j];
+  }
+}
+
+ll combi[MAX_N+2][MAX_N+2]; //aCb = combi[a][b]
+void makeCombiMod(){
   rep(i, 0, MAX_N+1) combi[i][0] = 1;
   rep(i, 1, MAX_N+1) combi[0][i] = 0;
   rep(i, 1, MAX_N+1){
-	rep(j, 1, i+1) combi[i][j] = combi[i-1][j-1] + combi[i-1][j];
+	rep(j, 1, i+1) combi[i][j] = (combi[i-1][j-1] + combi[i-1][j]) % MOD;
   }
 }
 
@@ -78,8 +87,8 @@ template <typename T> T fpow(T n, T p){
 }
 
 //n**p % m
-int powMod(int n, int p){
-  ll ans = 1, ln = n;
+int powMod(ll n, int p){
+  ll ans = 1, ln = n % MOD;
   if(p <= 0) return 1;
   while(p != 0){
 	if((p & 1) == 1) ans = (ans*ln) % MOD;

@@ -37,8 +37,9 @@ using namespace std;
 #define fabs(a) ((a) < 0? -(a) : (a))
 #define pb push_back
 #define rg(e, s, t) s <= e && e < t
-#define PQDecl(name, tp) priority_queue< tp, vector<tp>, greater<tp> > name;
-#define sz(v) ((int)(v).size());
+#define PQDecl(name, tp) priority_queue< tp, vector<tp>, greater<tp> > name
+#define dq(q) q.top();q.pop();
+#define sz(v) ((int)(v).size())
 //#define X real()
 //#define Y imag()
 //typedef unsigned int ui;
@@ -52,9 +53,17 @@ const double EPS = 1e-10;
 //const int dx[] = {1, -1, 0, 0, 1, -1, -1, 1};
 //const int dy[] = {0, 0, 1, -1, -1, -1, 1, 1};
 //const ll weight[] = {1e0,1e1,1e2,1e3,1e4,1e5,1e6,1e7,1e8,1e9,1e10,1e11,1e12,1e13};
-#define MAX_N 1000
+#define MAX_N 100005
+
+void solve(){
+}
 
 void doIt(){
+  int t = 1;
+  // scanf("%d", &t);
+  while(t--){
+    solve();
+  }
 }
 
 int main() {
