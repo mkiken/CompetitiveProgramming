@@ -99,7 +99,6 @@ int powMod(ll n, int p){
 }
 
 int gcd(int a, int b) {
-  if( a < b ) swap( a, b );
   return b != 0 ? gcd(b, a % b) : a;
 }
 int lcm(int a, int b) {
@@ -112,7 +111,6 @@ int extgcd(int a, int b, int &x, int &y) {
   if (b != 0) g = extgcd(b, a % b, y, x), y -= (a / b) * x;
   return g;
 }
-
 // 1/a mod m
 int mod_inverse(int a){
   int x, y;
@@ -270,7 +268,8 @@ ull _bigMul(ull a, ull b, int m){
 }
 
 void doIt(){
-    cout << _comb(10, 10, MOD) << endl;
+    // cout << _comb(10, 10, MOD) << endl;
+    cout << gcd(10, 15) << endl;
 }
 
 int main() {

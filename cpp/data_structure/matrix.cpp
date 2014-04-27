@@ -36,13 +36,12 @@ using namespace std;
 #define fmin(a, b) ((a) > (b)? (b) : (a))
 #define fabs(a) ((a) < 0? -(a) : (a))
 #define pb push_back
-#define fst(e) (e).first
-#define snd(e) (e).second
-#define rg(e, s, t) (s <= e && e < t)
+#define fst first
+#define snd second
+#define rg(e, s, t) s <= e && e < t
 #define PQDecl(name, tp) priority_queue< tp, vector<tp>, greater<tp> > name
 #define dq(q) q.top();q.pop();
 #define sz(v) ((int)(v).size())
-#define lg(s) ((int)(s).length())
 //#define X real()
 //#define Y imag()
 //typedef unsigned int ui;
@@ -72,6 +71,32 @@ typedef struct _Datum {
 
 
 #define MAX_N 100005
+
+typedef vector<int> vec;
+typedef vector<vec> matrix;
+
+//行列A * B % m
+matrix mulMod(matrix &A, matrix &B, int m){
+  matrix C(sz(A), vec(sz(B[0])));
+  Rep(i, sz(A))
+    Rep(k, sz(B))
+      Rep(j, sz(B[0]))
+        C[i][j] = (C[i][j] + A[i][k] * B[k][j]) % m;
+  return C;
+}
+
+//A^n
+matrix powMod(matrix A, ll n, int m){
+  matrix B(sz(A), vec(sz(A)));
+  Rep(i, sz(A)) B[i][i] = 1;
+  while(n > 0){
+    if(n & 1) B = mulMod(B, A, m);
+    A = mulMod(A, A, m);
+    n >>= 1;
+  }
+  return B;
+}
+
 
 void solve(){
 }

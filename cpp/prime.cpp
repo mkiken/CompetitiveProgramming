@@ -43,14 +43,14 @@ const double EPS = 1e-10;
 //calculate (a*b)%m
 //http://discuss.codechef.com/questions/9723/witmath-editorial
 ull bigMul(ull a, ull b, ull m){
-	int base = (int)1e9;
-	ull a_low = a % base, a_high = a / base, b_low = b % base, b_high = b / base, result;
-	result = (a_high * b_high) % m;
-	rep(i, 0, 9) result = (result * 10) % m;
-	result = (result + a_low*b_high + b_low*a_high) % m;
-	rep(i, 0, 9) result = (result * 10) % m;
-	result = (result + a_low*b_low) % m;
-	return result;
+  int base = (int)1e9;
+  ull a_low = a % base, a_high = a / base, b_low = b % base, b_high = b / base, result;
+  result = (a_high * b_high) % m;
+  rep(i, 0, 9) result = (result * 10) % m;
+  result = (result + a_low*b_high + b_low*a_high) % m;
+  rep(i, 0, 9) result = (result * 10) % m;
+  result = (result + a_low*b_low) % m;
+  return result;
 }
 
 //n**p % m
@@ -58,10 +58,10 @@ ull bigPowMod(ull n, ull p, ull m){
   ull ans = 1, ln = n;
   if(p <= 0) return 1;
   while(p != 0){
-	if((p & 1) == 1) ans = bigMul(ans, ln, m); //ans = (ans*ln) % m;
-	//ln = (ln * ln) % m;
-	ln = bigMul(ln, ln, m);
-	p = p >> 1;
+    if((p & 1) == 1) ans = bigMul(ans, ln, m); //ans = (ans*ln) % m;
+    //ln = (ln * ln) % m;
+    ln = bigMul(ln, ln, m);
+    p = p >> 1;
   }
   return ans;
 }
@@ -70,9 +70,9 @@ int _powMod(int n, int p, int m){
   ll ans = 1, ln = n;
   if(p <= 0) return 1;
   while(p != 0){
-	if((p & 1) == 1) ans = (ans*ln) % m;
-	ln = (ln * ln) % m;
-	p = p >> 1;
+    if((p & 1) == 1) ans = (ans*ln) % m;
+    ln = (ln * ln) % m;
+    p = p >> 1;
   }
   return (int)ans;
 }
@@ -83,7 +83,7 @@ bool suspect(int a, int s, ull d, ull n) {
   for (int r = 0; r < s; ++r) {
     if (x == n - 1) return true;
     x = x * x % n;
-	// x = bigMul(x, x, n);
+    // x = bigMul(x, x, n);
   }
   return false;
 }
@@ -102,17 +102,17 @@ bool MillerRabin(ull n) {
 }
 
 #define MAX_PRIMES 10002
-bool bPrimes[MAX_PRIMES];
+bool bPrimes[MAX_PRIMES+5];
 vector<int> primes;
 
 void makePrimes(){
   afill(bPrimes, true);
   bPrimes[0] = bPrimes[1] = false;
-  rep(i, 2, MAX_PRIMES){
-	if(bPrimes[i]){
-	  primes.push_back(i);
-	  for(int j = 2*i; j < MAX_PRIMES; j += i) bPrimes[j] = false;
-	}
+  rep(i, 2, MAX_PRIMES+5){
+    if(bPrimes[i]){
+      primes.push_back(i);
+      for(int j = 2*i; j < MAX_PRIMES+5; j += i) bPrimes[j] = false;
+    }
   }
 }
 
@@ -124,20 +124,20 @@ void makePrimes2(){
   bPrimes[0] = bPrimes[1] = false;
   primes.push_back(2);
   for(int i = 3; i < MAX_PRIMES; i += 2){
-	if(bPrimes[i]){
-	  primes.push_back(i);
-	  for(int j = 3*i; j < MAX_PRIMES; j += 2*i) bPrimes[j] = false;
-	}
+    if(bPrimes[i]){
+      primes.push_back(i);
+      for(int j = 3*i; j < MAX_PRIMES; j += 2*i) bPrimes[j] = false;
+    }
   }
   cout << primes.size() << endl;
 
 }
 
 void MillerRabinTest(){
-	ull a = (ull)1e18;
-	rep(i, 1, 21){
-		cout << a-i << " is " << MillerRabin(a-i) << endl;
-	}
+  ull a = (ull)1e18;
+  rep(i, 1, 21){
+    cout << a-i << " is " << MillerRabin(a-i) << endl;
+  }
 }
 
 int main() {
