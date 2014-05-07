@@ -71,21 +71,94 @@ typedef struct _Datum {
   }
 }datum;
 
-
-void prtAI(int *a, int n, bool display = true){
-    if(display) printf("---printAI---\n");
+void printAI(int *a, int n){
+    printf("---printAI---\n");
     Rep(i, n) printf("%d%c", a[i], i==n-1?'\n':' ');
-    if(display) printf("-----------------\n");
+    printf("-----------------\n");
 }
-void prtVI(const VI &v, bool display = true){
-    if(display) printf("-----printVI-----\n");
+void printAI2D(int **a, int n, int m){
+    printf("---printAI2D---\n");
+    Rep(i, n) Rep(j, m) printf("%d%c", a[i][j], j==n-1?'\n':' ');
+    printf("-----------------\n");
+}
+void printVI(const VI &v){
+    printf("-----printVI-----\n");
     Rep(i, sz(v)) printf("%d%c", v[i], i==sz(v)-1?'\n':' ');
-    if(display) printf("-----------------\n");
+    printf("-----------------\n");
 }
 
 #define MAX_N 100005
 
+// http://stackoverflow.com/questions/4938833/find-longest-increasing-sequence
+vector<int> getLIS(const vector<int> &v) {
+  int size = v.size(), max_len = 1;
+  // M[i] is the index of the last element of the sequence whose length is i
+  int *M = new int[size];
+  // P[i] is the index of the previous element of i in the sequence, which is used to print the whole sequence
+  int *P = new int[size];
+  M[0] = 0; P[0] = -1;
+  for (int i = 1; i < size; ++i) {
+    if (v[i] > v[M[max_len - 1]]) {
+      M[max_len] = i;
+      P[i] = M[max_len - 1];
+      ++max_len;
+      continue;
+    }
+    // Find the position to insert i using binary search
+    int lo = 0, hi = max_len - 1;
+    while (lo <= hi) {
+      int mid = lo + ((hi - lo) >> 1);
+      if (v[i] < v[M[mid]]) {
+        hi = mid - 1;
+      } else if (v[i] > v[M[mid]]) {
+        lo = mid + 1;
+      } else {
+        lo = mid;
+        break;
+      }
+    }
+    P[i] = P[M[lo]];  // Modify the previous pointer
+    M[lo] = i;
+  }
+  vector<int> res;
+  // Print the whole subsequence
+  int i = M[max_len - 1];
+  while (i >= 0) {
+      res.pb(v[i]);
+      i = P[i];
+  }
+  delete[] M, delete[] P;
+  reverse(vrange(res));
+  return res;
+}
+
+int getLISLength(const VI &v){
+    int n = sz(v);
+    VI dp(sz(v), INF);
+    Rep(i, sz(v)){
+        *(lower_bound(dp.begin(), dp.end(), v[i])) = v[i];
+    }
+    return lower_bound(dp.begin(), dp.end(), INF) - dp.begin();
+}
+
+void doTest() {
+  int data[] = {0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15};
+  vector<int> v;
+  v.insert(v.end(), data, data + sizeof(data) / sizeof(int));
+  printVI(getLIS(v));
+  cout << getLISLength(v) << endl;
+}
+
+// http://codeforces.com/contest/340/problem/D
 void solve(){
+    int n, a[MAX_N];
+    VI v;
+    cin >> n;
+    Rep(i, n){
+        scanf("%d", &a[i]);
+        v.pb(a[i]);
+    }
+    cout << getLISLength(v) << endl;
 }
 
 void doIt(){
