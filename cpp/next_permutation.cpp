@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+
 using namespace std;
 
 template < class BidirectionalIterator >
@@ -78,9 +79,18 @@ void doIt2(){
 
 }
 
+void all_permutate(int n){
+    vector<int> v(n, 0);
+    for(int i = 0; i < n; i++) v[i] = i;
+    do{
+        //do action
+        cout << 1 << endl;
+    }while(next_permutation(v.begin(), v.end()));
+}
+
 void doIt(){
   const int n = 3;
-  std::vector<int> data;
+  vector<int> data;
   // [0, 1, 2, ....]というサイズnの配列を作成
   for(int i=1; i<=3; ++i){
     data.push_back(i);
@@ -100,6 +110,7 @@ void doIt(){
 }
 
 int main(){
-  doIt3();
+    // doIt3();
+    all_permutate(4);
   return 0;
 }

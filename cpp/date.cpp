@@ -14,7 +14,6 @@
 #include <sstream>
 #include <functional>
 #include <complex>
-#include <cassert>
 
 using namespace std;
 
@@ -85,6 +84,15 @@ void prtVI(const VI &v, bool display = true){
 }
 
 #define MAX_N 100005
+
+// http://ja.wikipedia.org/wiki/%E3%83%84%E3%82%A7%E3%83%A9%E3%83%BC%E3%81%AE%E5%85%AC%E5%BC%8F
+ll zeller(ll y, int m, int d){
+    if(m == 1 || m == 2){
+        m += 12;
+        y--;
+    }
+    return 365*y + y/4 - y/100 + y/400 + (306*(m+1))/10 + d - 429;
+}
 
 void solve(){
 }

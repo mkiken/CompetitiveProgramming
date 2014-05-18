@@ -55,7 +55,7 @@ vector<string> split( string s, string c )
 // }
 
 // http://d.hatena.ne.jp/kobapan/20090208/1281901941
-ull b2i (const string &s) {
+ull s2b (const string &s) {
     ull out = 0;
     for (int i = 0; i < s.size(); ++i ) {
         out *= 2;
@@ -63,7 +63,7 @@ ull b2i (const string &s) {
     }
     return out;
 }
-string i2b(ull x) {
+string b2s(ull x) {
   string c;
   while(x){
 	if(x & 1) c += '1';
@@ -72,6 +72,16 @@ string i2b(ull x) {
   }
   reverse(c.begin(), c.end());
   return c;
+}
+string b2s(ull x, int len) {
+    string c = "";
+    for(int i = 0; i < len; i++){
+        int digit = x & (1 << i);
+        if(digit) c += '1';
+        else c += '0';
+    }
+    reverse(c.begin(), c.end());
+    return c;
 }
 
 //int to string
@@ -84,6 +94,21 @@ int s2i(string Text){
   if ( ! (istringstream(Text) >> Number) ) Number = -1;
   return Number;
 }
+
+
+//string to long long
+ll s2l(string Text){
+    ll Number;
+    // if ( ! (stringstream(Text) >> Number) ) Number = -1;
+    stringstream sstr(Text);
+    sstr >> Number;
+    return Number;
+}
+
+string l2s(ll n){
+    return to_string(n);
+}
+
 
 //string to double
 //http://eternuement.blogspot.jp/2011/04/c-string-double-int.html
@@ -128,7 +153,7 @@ int pow(int n, int p, int m){
   ll ans = 1, ln = n;
   if(p <= 0) return 1;
   while(p != 0){
-	if(p & 1 == 1) ans = (ans*ln) % m;
+      if((p & 1) == 1) ans = (ans*ln) % m;
 	ln = (ln * ln) % m;
 	p = p >> 1;
   }

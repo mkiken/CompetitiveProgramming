@@ -1,4 +1,3 @@
-
 import Control.Applicative
 import Control.Monad
 --import Data.Char
@@ -10,13 +9,21 @@ import Text.Printf
 import qualified Data.ByteString.Char8 as B
 import qualified Data.Map as Map
 
-readInt :: B.ByteString -> Int
-readInt = fst . fromJust . B.readInt
-
 rsort :: [Int] -> [Int]
 rsort = sortBy (\x y -> compare y x )
 
-{- readInts = map read . words <$> getLine -}
+mjoin sp ary = intercalate sp (map show ary)
 
-main = print 0
 
+-- readInt = read <$> getLine
+-- readInts = map read . words <$> getLine
+
+
+solve = do
+  print 1
+
+
+main = do
+  -- t <- readInt
+  -- replicateM t solve
+  replicateM 1 solve
