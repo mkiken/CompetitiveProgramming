@@ -72,17 +72,13 @@ typedef struct _Datum {
   }
 }datum;
 
-
-void prtAI(int *a, int n, bool display = true){
-    if(display) printf("---printAI---\n");
+void prtAI(int *a, int n){
     Rep(i, n) printf("%d%c", a[i], i==n-1?'\n':' ');
-    if(display) printf("-----------------\n");
 }
-void prtVI(const VI &v, bool display = true){
-    if(display) printf("-----printVI-----\n");
+void prtVI(const VI &v){
     Rep(i, sz(v)) printf("%d%c", v[i], i==sz(v)-1?'\n':' ');
-    if(display) printf("-----------------\n");
 }
+
 
 #define MAX_N 100005
 

@@ -14,6 +14,7 @@
 #include <sstream>
 #include <functional>
 #include <complex>
+#include <cassert>
 
 using namespace std;
 
@@ -71,94 +72,105 @@ typedef struct _Datum {
   }
 }datum;
 
-void printAI(int *a, int n){
-    printf("---printAI---\n");
+
+void prtAI(int *a, int n, bool display = true){
+    if(display) printf("---printAI---\n");
     Rep(i, n) printf("%d%c", a[i], i==n-1?'\n':' ');
-    printf("-----------------\n");
+    if(display) printf("-----------------\n");
 }
-void printAI2D(int **a, int n, int m){
-    printf("---printAI2D---\n");
-    Rep(i, n) Rep(j, m) printf("%d%c", a[i][j], j==n-1?'\n':' ');
-    printf("-----------------\n");
-}
-void printVI(const VI &v){
-    printf("-----printVI-----\n");
+void prtVI(const VI &v, bool display = true){
+    if(display) printf("-----printVI-----\n");
     Rep(i, sz(v)) printf("%d%c", v[i], i==sz(v)-1?'\n':' ');
-    printf("-----------------\n");
+    if(display) printf("-----------------\n");
 }
 
-#define MAX_N 100005
+#define MAX_N 300005
+#define MAX_LOGN 20
 
-// http://stackoverflow.com/questions/4938833/find-longest-increasing-sequence
-vector<int> getLIS(const vector<int> &v) {
-  int size = v.size(), max_len = 1;
-  // M[i] is the index of the last element of the sequence whose length is i
-  int *M = new int[size];
-  // P[i] is the index of the previous element of i in the sequence, which is used to print the whole sequence
-  int *P = new int[size];
-  M[0] = 0; P[0] = -1;
-  for (int i = 1; i < size; ++i) {
-    if (v[i] > v[M[max_len - 1]]) {
-      M[max_len] = i;
-      P[i] = M[max_len - 1];
-      ++max_len;
-      continue;
+int gcd(int a, int b){
+  return b == 0? a : gcd(b, a % b);
+}
+
+
+/*Sparse Table
+  http://www.topcoder.com/tc?d1=tutorials&d2=lowestCommonAncestor&module=Static
+  the overall complexity of the algorithm is <O(N logN), O(1)> (<construction, query>).
+ */
+
+int n, a[MAX_N], dp_min[MAX_N][MAX_LOGN + 1], dp_gcd[MAX_N][MAX_LOGN + 1];
+
+// http://codeforces.com/contest/359/problem/D
+void solve(){
+
+  afill2(dp_gcd, -1, int);
+  afill2(dp_min, INF, int);
+  scanf("%d", &n);
+
+  Rep(i, n) {
+    scanf("%d", &a[i]);
+    dp_min[i][0] = dp_gcd[i][0] = a[i];
+  }
+
+  rep(j, 1, MAX_LOGN + 1){
+    Rep(i, n){
+      int tv = i + (1 << (j-1));
+      if(tv >= n) continue;
+      if(dp_min[tv][j-1] == INF) continue;
+      dp_min[i][j] = min(dp_min[i][j-1], dp_min[tv][j-1]);
+      dp_gcd[i][j] = gcd(dp_gcd[i][j-1], dp_gcd[tv][j-1]);
     }
-    // Find the position to insert i using binary search
-    int lo = 0, hi = max_len - 1;
-    while (lo <= hi) {
-      int mid = lo + ((hi - lo) >> 1);
-      if (v[i] < v[M[mid]]) {
-        hi = mid - 1;
-      } else if (v[i] > v[M[mid]]) {
-        lo = mid + 1;
-      } else {
-        lo = mid;
-        break;
+  }
+
+  int h = n, l = 0, m, l2;
+  bool bOK;
+  while(l < h){
+    m = (l + h) / 2 + (l + h) % 2;
+    l2 = (int)log2(m);
+    bOK = false;
+
+    Rep(i, n - m){
+      int tmin = min(dp_min[i][l2], dp_min[i + m - (1 << l2)+1][l2]);
+      int tgcd = gcd(dp_gcd[i][l2], dp_gcd[i + m - (1 << l2)+1][l2]);
+
+      if(tmin == tgcd){
+        bOK = true;
       }
     }
-    P[i] = P[M[lo]];  // Modify the previous pointer
-    M[lo] = i;
-  }
-  vector<int> res;
-  // Print the whole subsequence
-  int i = M[max_len - 1];
-  while (i >= 0) {
-      res.pb(v[i]);
-      i = P[i];
-  }
-  delete[] M, delete[] P;
-  reverse(vrange(res));
-  return res;
-}
 
-int getLISLength(const VI &v){
-    int n = sz(v);
-    vector<int> dp(n, INF);
-    Rep(i, n){
-        *(lower_bound(dp.begin(), dp.end(), v[i])) = v[i];
+    if(bOK){
+      l = m;
+    } else {
+      h = m - 1;
     }
-    return lower_bound(dp.begin(), dp.end(), INF) - dp.begin();
-}
+  }
 
-void doTest() {
-  int data[] = {0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15};
+  m = (l + h) / 2 + (l + h) % 2;
+  if(m == 0){
+    printf("%d 0\n", n);
+    Rep(i, n-1){
+      printf("%d ", i+1);
+    }
+    printf("%d\n", n);
+    return;
+  }
+
+  l2 = (int)log2(m);
   vector<int> v;
-  v.insert(v.end(), data, data + sizeof(data) / sizeof(int));
-  printVI(getLIS(v));
-  cout << getLISLength(v) << endl;
-}
 
-// http://codeforces.com/contest/340/problem/D
-void solve(){
-    int n, a[MAX_N];
-    VI v;
-    cin >> n;
-    Rep(i, n){
-        scanf("%d", &a[i]);
-        v.pb(a[i]);
+  Rep(i, n - m){
+    int tmin = min(dp_min[i][l2], dp_min[i + m - (1 << l2)+1][l2]);
+    int tgcd = gcd(dp_gcd[i][l2], dp_gcd[i + m - (1 << l2)+1][l2]);
+
+    if(tmin == tgcd){
+      v.pb(i+1);
     }
-    cout << getLISLength(v) << endl;
+  }
+
+  printf("%d %d\n", sz(v), m);
+  Rep(i, sz(v)-1){
+    printf("%d ", v[i]);
+  }
+  printf("%d\n", v[sz(v)-1]);
 }
 
 void doIt(){
