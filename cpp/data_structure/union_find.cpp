@@ -51,29 +51,28 @@ typedef struct _UNION_FIND{
   int par[MAX_N];
   int rank[MAX_N];
   void init(int n){
-	rep(i, 0, n){
-	  par[i] = i;
-	  rank[i] = 0;
-	}
+    rep(i, 0, n){
+      par[i] = i;
+      rank[i] = 0;
+    }
   }
   int find(int x){
-	if(par[x] == x) return x;
-	else return par[x] = find(par[x]);
+    if(par[x] == x) return x;
+    else return par[x] = find(par[x]);
   }
   void unite(int x, int y){
-	x = find(x);
-	y = find(y);
-	if(x == y) return;
-	if(rank[x] < rank[y]) par[x] = y;
-	else{
-	  par[y] = x;
-	  if(rank[x] == rank[y]) rank[x]++;
-	}
+    x = find(x);
+    y = find(y);
+    if(x == y) return;
+    if(rank[x] < rank[y]) par[x] = y;
+    else{
+      par[y] = x;
+      if(rank[x] == rank[y]) rank[x]++;
+    }
   }
   bool same(int x, int y){
-	return find(x) == find(y);
+    return find(x) == find(y);
   }
-
 } union_find;
 
 // http://judge.u-aizu.ac.jp/onlinejudge/cdescription.jsp?cid=ACAC002&pid=B
@@ -85,16 +84,16 @@ void doIt(){
   cin >> v >> e;
   uf.init(v+1);
   rep(i, 0, e){
-	cin >> s[i] >> t[i] >> wt;
-	w[i] = P(wt, i);
+    cin >> s[i] >> t[i] >> wt;
+    w[i] = P(wt, i);
   }
   sort(w, w + e);
   rep(i, 0, e){
-	int eid = w[i].second;
-	if(!uf.same(s[eid], t[eid])){
-	  uf.unite(s[eid], t[eid]);
-	  ans += w[i].first;
-	}
+    int eid = w[i].second;
+    if(!uf.same(s[eid], t[eid])){
+      uf.unite(s[eid], t[eid]);
+      ans += w[i].first;
+    }
   }
   cout << ans << endl;
 }

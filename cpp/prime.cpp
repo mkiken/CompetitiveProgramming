@@ -40,6 +40,37 @@ const double EPS = 1e-10;
 //const int weight[] = {0,1,10,100,1000,10000,100000,1000000,10000000};
 //priority_queue<int, vector<int>, greater<int>> q;
 
+#define MAX_PRIMES 10002
+bool bPrimes[MAX_PRIMES+5];
+vector<int> primes;
+void makePrimes(){
+  afill(bPrimes, true);
+  bPrimes[0] = bPrimes[1] = false;
+  rep(i, 2, MAX_PRIMES+5){
+    if(bPrimes[i]){
+      primes.push_back(i);
+      for(int j = 2*i; j < MAX_PRIMES+5; j += i) bPrimes[j] = false;
+    }
+  }
+}
+
+//偶数は無視する
+void makePrimes2(){
+  bool bPrimes[MAX_PRIMES];
+  vector<int> primes;
+  afill(bPrimes, true);
+  bPrimes[0] = bPrimes[1] = false;
+  primes.push_back(2);
+  for(int i = 3; i < MAX_PRIMES; i += 2){
+    if(bPrimes[i]){
+      primes.push_back(i);
+      for(int j = 3*i; j < MAX_PRIMES; j += 2*i) bPrimes[j] = false;
+    }
+  }
+  cout << primes.size() << endl;
+}
+
+
 //calculate (a*b)%m
 //http://discuss.codechef.com/questions/9723/witmath-editorial
 ull bigMul(ull a, ull b, ull m){
@@ -99,38 +130,6 @@ bool MillerRabin(ull n) {
   for (int i = 0; test[i] < n && test[i] != -1; ++i)
     if (!suspect(test[i], s, d, n)) return false;
   return true;
-}
-
-#define MAX_PRIMES 10002
-bool bPrimes[MAX_PRIMES+5];
-vector<int> primes;
-
-void makePrimes(){
-  afill(bPrimes, true);
-  bPrimes[0] = bPrimes[1] = false;
-  rep(i, 2, MAX_PRIMES+5){
-    if(bPrimes[i]){
-      primes.push_back(i);
-      for(int j = 2*i; j < MAX_PRIMES+5; j += i) bPrimes[j] = false;
-    }
-  }
-}
-
-//偶数は無視する
-void makePrimes2(){
-  bool bPrimes[MAX_PRIMES];
-  vector<int> primes;
-  afill(bPrimes, true);
-  bPrimes[0] = bPrimes[1] = false;
-  primes.push_back(2);
-  for(int i = 3; i < MAX_PRIMES; i += 2){
-    if(bPrimes[i]){
-      primes.push_back(i);
-      for(int j = 3*i; j < MAX_PRIMES; j += 2*i) bPrimes[j] = false;
-    }
-  }
-  cout << primes.size() << endl;
-
 }
 
 void MillerRabinTest(){

@@ -8,8 +8,15 @@ def printArray(list)
     }
 end
 
-
-def doIt()
+def solve()
 end
 
-doIt
+def doIt()
+  t = gets.to_i
+  t.times{
+    solve
+  }
+end
+
+# doIt
+solve
