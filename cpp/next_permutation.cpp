@@ -6,9 +6,9 @@ using namespace std;
 
 template < class BidirectionalIterator >
 bool next_combination ( BidirectionalIterator first1 ,
-  BidirectionalIterator last1 ,
-  BidirectionalIterator first2 ,
-  BidirectionalIterator last2 )
+                        BidirectionalIterator last1 ,
+                        BidirectionalIterator first2 ,
+                        BidirectionalIterator last2 )
 {
   if (( first1 == last1 ) || ( first2 == last2 )) {
     return false ;
@@ -40,11 +40,10 @@ bool next_combination ( BidirectionalIterator first1 ,
   }
   return ! result ;
 }
-
 template < class BidirectionalIterator >
 bool next_combination ( BidirectionalIterator first ,
-  BidirectionalIterator middle ,
-  BidirectionalIterator last )
+                        BidirectionalIterator middle ,
+                        BidirectionalIterator last )
 {
   return next_combination (first , middle , middle , last );
 }
@@ -54,8 +53,8 @@ void doIt3(){
   //ソートが必要！
   sort(ary, ary + 5);
   do{
-	for(int i = 0; i < 3; i++) cout << ary[i] << " " ;
-	cout << endl;
+    for(int i = 0; i < 3; i++) cout << ary[i] << " " ;
+    cout << endl;
   }
   while(next_combination(ary, ary + 3, ary + 5));
 }
@@ -80,12 +79,12 @@ void doIt2(){
 }
 
 void all_permutate(int n){
-    vector<int> v(n, 0);
-    for(int i = 0; i < n; i++) v[i] = i;
-    do{
-        //do action
-        cout << 1 << endl;
-    }while(next_permutation(v.begin(), v.end()));
+  vector<int> v(n, 0);
+  for(int i = 0; i < n; i++) v[i] = i;
+  do{
+    //do action
+    cout << 1 << endl;
+  } while(next_permutation(v.begin(), v.end()));
 }
 
 void doIt(){
@@ -95,22 +94,20 @@ void doIt(){
   for(int i=1; i<=3; ++i){
     data.push_back(i);
   }
-    // 全ての順列を出力
+  // 全ての順列を出力
   do{
-	cout << data[0] << " " << data[1] << " " << data[2] << endl;
-
+    cout << data[0] << " " << data[1] << " " << data[2] << endl;
   }while(next_permutation(data.begin(), data.end()));
   // // 全ての順列を出力
   // do{
   // 	int s = data[0]*1000 + data[1] * 100 + data[2] * 10 + data[3];
   //   int t = data[5]*1000 + data[6] * 100 + data[7] * 10 + data[8];
   // 	if(s * data[4] == t) cout << s << " * " << data[4] << " = " << t << endl;
-
   // }while(next_permutation(data.begin(), data.end()));
 }
 
 int main(){
-    // doIt3();
-    all_permutate(4);
+  // doIt3();
+  all_permutate(4);
   return 0;
 }

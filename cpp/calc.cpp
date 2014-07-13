@@ -267,6 +267,18 @@ ull _bigMul(ull a, ull b, int m){
 	return result;
 }
 
+// http://stackoverflow.com/questions/1549941/perfect-square-and-perfect-cube
+bool is_perfect_square(int n) {
+    if (n < 0)
+        return false;
+    int root(round(sqrt(n)));
+    return n == root * root;
+}
+bool is_perfect_cube(int n) {
+    int root(round(cbrt(n)));
+    return n == root * root * root;
+}
+
 void doIt(){
     // cout << _comb(10, 10, MOD) << endl;
     cout << gcd(10, 15) << endl;
