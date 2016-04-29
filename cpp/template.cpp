@@ -23,7 +23,8 @@ using namespace std;
 #define Rep(i, e) for(int i = 0;i < (e);i++)
 #define rrep(i, e, s) for(int i = (e);(s) <= i;i--)
 #define Rrep(i, e) for(int i = e;0 <= i;i--)
-#define mrep(i, e, t1, t2) for(map<t1, t2>::iterator i = e.begin(); i != e.end(); i++)
+#define maprep(i, e, t1, t2) for(map<t1, t2>::iterator i = e.begin(); i != e.end(); i++)
+#define setrep(i, e, t) for(set<t>::iterator i = e.begin(); i != e.end(); i++)
 #define vrange(v) v.begin(), v.end()
 #define vrrange(v) v.rbegin(), v.rend()
 #define vsort(v) sort(vrange(v))
@@ -77,6 +78,12 @@ void prtAI(int *a, int n){
 }
 void prtVI(const VI &v){
     Rep(i, sz(v)) printf("%d%c", v[i], i==sz(v)-1?'\n':' ');
+}
+void prtP(P p){
+  printf("%d, %d\n", p.first, p.second);
+}
+void prtVP(const vector<P> &vp){
+    Rep(i, sz(vp)) prtP(vp[i]);
 }
 
 
