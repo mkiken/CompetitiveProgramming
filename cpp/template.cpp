@@ -33,9 +33,6 @@ using namespace std;
 #define asort(a) sort(arange(a))
 #define arsort(a, t) sort(arange(a), greater<t>())
 #define afill(a, v) fill(arange(a), v)
-#define afill2(a, v, t) fill((t *)(a), (t *)((a) + len(a)), v)
-#define fmax(a, b) ((a) < (b)? (b) : (a))
-#define fmin(a, b) ((a) > (b)? (b) : (a))
 #define fabs(a) ((a) < 0? -(a) : (a))
 #define pb push_back
 #define fst(e) (e).first
@@ -73,9 +70,36 @@ typedef struct _Datum {
   }
 }datum;
 
-void prtAI(int *a, int n){
-    Rep(i, n) printf("%d%c", a[i], i==n-1?'\n':' ');
+void draw_line(){
+  printf("\n-----------------------------\n\n");
 }
+template<typename T>
+void prtA(const T &a, int n = 0){
+  draw_line();
+  if (!n) n = len(a);
+    Rep(i, n) printf("%d%c", a[i], i==n-1?'\n':' ');
+  draw_line();
+}
+template<typename T>
+void prtA2d(const T &a, int x = 0, int y = 0){
+  draw_line();
+  if (!x) x = len(a);
+  if (!y) y = len(*a);
+    Rep(i, x) Rep(j, y) printf("%d%c", a[i][j], j % y == y-1?'\n':' ');
+  draw_line();
+}
+template<typename T>
+void prtA3d(const T &a, int x = 0, int y = 0, int z = 0){
+  draw_line();
+  if (!x) x = len(a);
+  if (!y) y = len(*a);
+  if (!z) z = len(**a);
+    Rep(i, x) Rep(j, y) Rep(k, z){
+      printf("%d%s", a[i][j][k], k % z == z-1? (j % y == y-1?"\n\n":"\n"):" ");
+    }
+  draw_line();
+}
+
 void prtVI(const VI &v){
     Rep(i, sz(v)) printf("%d%c", v[i], i==sz(v)-1?'\n':' ');
 }
@@ -84,6 +108,25 @@ void prtP(P p){
 }
 void prtVP(const vector<P> &vp){
     Rep(i, sz(vp)) prtP(vp[i]);
+}
+
+// C++ 11+ only. use 'g++ -std=c++11' when compile.
+template<typename T, typename... Rest>
+int fmax(const T& a, const Rest&... rest)
+{
+  T b = fmax(rest...);
+  return ((a) < (b)? (b) : (a));
+}
+template<typename T, typename... Rest>
+int fmin(const T& a, const Rest&... rest)
+{
+  T b = fmin(rest...);
+  return ((a) > (b)? (b) : (a));
+}
+template<typename T, typename T2>
+void afill2(T &a, const T2 v)
+{
+  fill((T2 *)(a), (T2 *)((a) + len(a)), v);
 }
 
 

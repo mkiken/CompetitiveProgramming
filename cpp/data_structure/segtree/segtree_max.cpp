@@ -64,12 +64,21 @@ ll _getMin(int a, int b, int k, int l, int r){
   ll right = _getMin(a, b, k * 2 + 2, (l + r) / 2, r);
   return fmin(left, right) + segAddMin[k];
 }
-//区間[a, b)に値xを加算する.sizeは木の要素数
+
+/**
+ * 区間[a, b]に値xを加算する.
+ * sizeは木の要素数
+ */
 void addMin(int a, int b, int x, int size){
-  _addMin(a, b, x, 0, 0, size);
+  _addMin(a, b+1, x, 0, 0, size+1);
 }
+
+/**
+ * 区間[a, b]の最小値を取得.
+ * sizeは木の要素数
+ */
 ll getMin(int a, int b, int size){
-  return _getMin(a, b, 0, 0, size);
+  return _getMin(a, b+1, 0, 0, size+1);
 }
 
 //Segment Tree for maximum value.
@@ -94,42 +103,20 @@ ll _getMax(int a, int b, int k, int l, int r){
   ll right = _getMax(a, b, k * 2 + 2, (l + r) / 2, r);
   return fmax(left, right) + segAddMax[k];
 }
-//区間[a, b)に値xを加算する.
+/**
+ * 区間[a, b]に値xを加算する.
+ * sizeは木の要素数
+ */
 void addMax(int a, int b, int x, int size){
-  _addMax(a, b, x, 0, 0, size);
+  _addMax(a, b+1, x, 0, 0, size+1);
 }
+
+/**
+ * 区間[a, b]の最大値を取得.
+ * sizeは木の要素数
+ */
 ll getMax(int a, int b, int size){
-  return _getMax(a, b, 0, 0, size);
-}
-
-
-//Segment Tree for sum value.
-ll all[MAX_SIZE], part[MAX_SIZE];
-//区間[a, b)に値xを加算する.
-void _addSum(int a, int b, int x, int k, int l, int r){
-  if (a <= l && r <= b) all[k] += x;
-  else if (l < b && a < r){
-	part[k] += (min(b, r) - max(a, l)) * x;
-	_addSum(a, b, x, k * 2 + 1, l, (l + r) / 2);
-	_addSum(a, b, x, k * 2 + 2, (l + r) / 2, r);
-  }
-}
-ll _getSum(int a, int b, int k, int l, int r){
-  if (b <= l || r <= a) return 0;
-  else if (a <= l && r <= b) return (all[k] * (r - l) + part[k]);
-  else {
-	ll res;
-	res = (min(b, r) - max(a, l)) * all[k];
-	res += _getSum(a, b, k * 2 + 1, l, (l + r) / 2);
-	res += _getSum(a, b, k * 2 + 2, (l + r) / 2, r);
-	return res;
-  }
-}
-void addSum(int a, int b, int x, int size){
-  _addSum(a, b, x, 0, 0, size);
-}
-ll getSum(int a, int b, int size){
-  _getSum(a, b, 0, 0, size);
+  return _getMax(a, b+1, 0, 0, size+1);
 }
 
 void doIt(){
@@ -140,24 +127,24 @@ void doIt(){
   afill(segAddMax, 0);
   cin >> n;
   rep(i, 0, n){
-	cin >> b;
-	addMin(i, i+1, b, n);
-	addMax(i, i+1, b, n);
+	  cin >> b;
+	  addMin(i, i+1, b, n);
+	  addMax(i, i+1, b, n);
   }
   cin >> q;
   while(q--){
-	ll mmin, mmax;
-	double res;
-	cin >> l >> r;
-	mmin = getMin(l, r+1, n);
-	mmax = fmax(getMax(0, l, n), 0);
-	mmax = max(getMax(r+1, n, n), mmax);
-	if(l == r) res = fmax(mmin, mmin + mmax);
-	else{
-	  res = mmin + fmax((getMax(l, r+1, n) - mmin), 0) / 2.0;
-	  res = fmax(res, mmin + mmax);
-	}
-	printf("%.1f\n", res);
+	  ll mmin, mmax;
+	  double res;
+	  cin >> l >> r;
+	  mmin = getMin(l, r+1, n);
+	  mmax = fmax(getMax(0, l, n), 0);
+	  mmax = max(getMax(r+1, n, n), mmax);
+	  if(l == r) res = fmax(mmin, mmin + mmax);
+	  else{
+	    res = mmin + fmax((getMax(l, r+1, n) - mmin), 0) / 2.0;
+	    res = fmax(res, mmin + mmax);
+	  }
+	  printf("%.1f\n", res);
   }
 }
 

@@ -54,46 +54,47 @@ const double EPS = 1e-10;
 //const int dy[] = {0, 0, 1, -1, -1, -1, 1, 1};
 //const ll weight[] = {1e0,1e1,1e2,1e3,1e4,1e5,1e6,1e7,1e8,1e9,1e10,1e11,1e12,1e13};
 #define MAX_N 100005
-#define MAX 1000
-#define MIN 0
+#define BIN_SEARCH_MAX 1000
+#define BIN_SEARCH_MIN 0
 
 bool check(long u){
   return true;
 }
-bool check2(long u){
-  return true;
-}
 
-void solve2(){
-  long u = MAX; //MAXは探索空間の最大値
-  long l = MIN; //MINは探索空間の最小値
-  if(check2(l) == false){return;} //最小値でfalseだったら全部false
+// checkを満たす最大の値を二分探索で求める
+long max_bin_search(){
+  long u = BIN_SEARCH_MAX; //BIN_SEARCH_MAXは探索空間の最大値
+  long l = BIN_SEARCH_MIN; //BIN_SEARCH_MINは探索空間の最小値
+  if(check(l) == false){return BIN_SEARCH_MIN - 1;} //最小値でfalseだったら全部false
 
-  while(l < u){
     long m = (l + u) / 2 + (l + u) % 2; //切り捨てではなく切り上げ
-	if(check2(m) == false) u = m - 1; //mは探索空間外
-	else l = m; //mはまだ探索空間に残しておく
+  while(l < u){
+    m = (l + u) / 2 + (l + u) % 2;
+	  if(check(m) == false) u = m - 1; //mは探索空間外
+	  else l = m; //mはまだ探索空間に残しておく
   }
-  // return m;
+  return m;
 }
 
-void solve(){
-  long u = MAX; //MAXは探索空間の最大値
-  long l = MIN; //MINは探索空間の最小値
-  if(check(u) == false){return;} //最大値でfalseだったら全部false
+// checkを満たす最小の値を二分探索で求める
+long min_bin_search(){
+  long u = BIN_SEARCH_MAX; //BIN_SEARCH_MAXは探索空間の最大値
+  long l = BIN_SEARCH_MIN; //BIN_SEARCH_MINは探索空間の最小値
+  if(check(u) == false){return BIN_SEARCH_MAX + 1;} //最大値でfalseだったら全部false
+	  long m = (l + u) / 2;
   while(l < u){
-	long m = (l + u) / 2;
-	if(check(m)) u = m; //mはまだ探索空間に残しておく
-	else l = m + 1; //mは探索空間外
+	  m = (l + u) / 2;
+	  if(check(m)) u = m; //mはまだ探索空間に残しておく
+	  else l = m + 1; //mは探索空間外
   }
-  // return l;
+  return m;
 }
 
 void doIt(){
   int t = 1;
   // scanf("%d", &t);
   while(t--){
-    solve();
+    min_bin_search();
   }
 }
 
