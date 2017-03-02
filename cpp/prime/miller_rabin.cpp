@@ -19,38 +19,43 @@ const double EPS = 1e-10;
 // * how to use *
 // MillerRabin mr;
 // mr.check(1);
+
+// 扱う値がsqrt(ullの最大値)より小さいかどうか
+// 扱う値がsqrt(ullの最大値)より小さいのであればbig系の関数でなくてもよいので高速化できる
+#define SMALL_ENOUGH 0
+
 class MillerRabin{
 private:
   static const int test[];
   //calculate (a*b)%m
   //http://discuss.codechef.com/questions/9723/witmath-editorial
-  // ull bigMul(ull a, ull b, ull m){
-  //   int base = (int)1e9;
-  //   ull a_low = a % base, a_high = a / base, b_low = b % base, b_high = b / base, result;
-  //   result = (a_high * b_high) % m;
-  //   for (int i = 0; i < 9; i++){
-  //     result = (result * 10) % m;
-  //   }
-  //   result = (result + a_low*b_high + b_low*a_high) % m;
-  //   for (int i = 0; i < 9; i++){
-  //     result = (result * 10) % m;
-  //   }
-  //   result = (result + a_low*b_low) % m;
-  //   return result;
-  // }
-  //
-  // //n**p % m
-  // ull bigPowMod(ull n, ull p, ull m){
-  //   ull ans = 1, ln = n;
-  //   if(p <= 0) return 1;
-  //   while(p != 0){
-  //     if((p & 1) == 1) ans = bigMul(ans, ln, m); //ans = (ans*ln) % m;
-  //     //ln = (ln * ln) % m;
-  //     ln = bigMul(ln, ln, m);
-  //     p = p >> 1;
-  //   }
-  //   return ans;
-  // }
+  ull bigMul(ull a, ull b, ull m){
+    int base = (int)1e9;
+    ull a_low = a % base, a_high = a / base, b_low = b % base, b_high = b / base, result;
+    result = (a_high * b_high) % m;
+    for (int i = 0; i < 9; i++){
+      result = (result * 10) % m;
+    }
+    result = (result + a_low*b_high + b_low*a_high) % m;
+    for (int i = 0; i < 9; i++){
+      result = (result * 10) % m;
+    }
+    result = (result + a_low*b_low) % m;
+    return result;
+  }
+
+  //n**p % m
+  ull bigPowMod(ull n, ull p, ull m){
+    ull ans = 1, ln = n;
+    if(p <= 0) return 1;
+    while(p != 0){
+      if((p & 1) == 1) ans = bigMul(ans, ln, m); //ans = (ans*ln) % m;
+      //ln = (ln * ln) % m;
+      ln = bigMul(ln, ln, m);
+      p = p >> 1;
+    }
+    return ans;
+  }
 
   int _powMod(int n, int p, int m){
     ll ans = 1, ln = n;
@@ -62,14 +67,21 @@ private:
     }
     return (int)ans;
   }
+
   bool suspect(int a, int s, ull d, ull n) {
-    // ull x = bigPowMod(a, d, n);
+#if SMALL_ENOUGH
     ull x = _powMod(a, d, n);
+#else
+    ull x = bigPowMod(a, d, n);
+#endif
     if (x == 1) return true;
     for (int r = 0; r < s; ++r) {
       if (x == n - 1) return true;
+#if SMALL_ENOUGH
       x = x * x % n;
-      // x = bigMul(x, x, n);
+#else
+      x = bigMul(x, x, n);
+#endif
     }
     return false;
   }
