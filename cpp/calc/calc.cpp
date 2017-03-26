@@ -53,15 +53,6 @@ void makeCombi(){
   }
 }
 
-ll combi[MAX_N+2][MAX_N+2]; //aCb = combi[a][b]
-void makeCombiMod(){
-  rep(i, 0, MAX_N+1) combi[i][0] = 1;
-  rep(i, 1, MAX_N+1) combi[0][i] = 0;
-  rep(i, 1, MAX_N+1){
-	rep(j, 1, i+1) combi[i][j] = (combi[i-1][j-1] + combi[i-1][j]) % MOD;
-  }
-}
-
 //n**p
 ll lpow(ll n, ll p){
   ll ans = 1, ln = n;

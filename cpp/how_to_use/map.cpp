@@ -25,15 +25,16 @@ void doIt(){
   map<ull, ull>::iterator it;
   if(mmap.count(2) == 0) ;
   else{
-	if(1 < mmap[2]) mmap[2] = 3;
+    if(1 < mmap[2]) mmap[2] = 3;
   }
   mmap[3] = 4;
+  mmap[3] = 5;
   it = mmap.begin();
   while( it != mmap.end() )
-	{
-	  cout << (*it).second << endl;
-	  ++it;
-	}
+  {
+    cout << (*it).second << endl;
+    ++it;
+  }
 }
 
 int main() {
