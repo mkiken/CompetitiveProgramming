@@ -44,7 +44,7 @@ public:
     V = v;
     G = vector<VI>(v + 1);
     match = VI(v + 1, -1);
-    used = vector<bool>(v + 1, -1);
+    used = vector<bool>(v + 1, false);
   }
 
   void initializeEdge(){
@@ -63,7 +63,7 @@ public:
     fill(match.begin(), match.end(), -1);
     for (int v = 0; v < V; v++){
       if(match[v] < 0){
-        fill(used.begin(), used.end(), -1);
+        fill(used.begin(), used.end(), false);
         if(dfs(v)) res++;
       }
     }
