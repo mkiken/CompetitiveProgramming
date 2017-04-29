@@ -24,7 +24,9 @@ typedef tuple<int, int, int> ituple;
 
 class StarrySkyTree{
 protected:
-  vector<ll> seg, segAdd;
+
+  const static int SIZE = 1 << 17;
+  ll seg[SIZE * 2 + 2], segAdd[SIZE * 2 + 2];
   int size;
 
   // 木の子から親を定義する関数
@@ -58,8 +60,6 @@ protected:
 public:
   StarrySkyTree(int n){
     size = n;
-    seg = vector<ll>(4 * n, 0);
-    segAdd = vector<ll>(4 * n, 0);
   }
 
   /**
@@ -90,7 +90,7 @@ protected:
 
   // 木のインデックス範囲外の時に返すデフォルト値
   ll _getDefaultValue(){
-    return INT_MAX;
+    return LLONG_MAX;
   }
 };
 
@@ -104,7 +104,7 @@ protected:
 
   // 木のインデックス範囲外の時に返すデフォルト値
   ll _getDefaultValue(){
-    return -INT_MAX;
+    return LLONG_MIN;
   }
 };
 
@@ -146,7 +146,7 @@ void execMax(){
 }
 
 void exec(){
-  execMax();
+  execMin();
 }
 
 void solve(){
