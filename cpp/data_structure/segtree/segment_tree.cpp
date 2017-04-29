@@ -28,14 +28,10 @@ protected:
   int size;
 
   // 木の子から親を定義する関数
-  ll _func(ll a, ll b){
-    return min(a, b);
-  }
+  virtual ll _func(ll a, ll b) = 0;
 
   // 木のインデックス範囲外の時に返すデフォルト値
-  ll _getDefaultValue(){
-    return INT_MAX;
-  }
+  virtual ll _getDefaultValue() = 0;
 
   void _add(int a, int b, int x, int k, int l, int r){
     if (r <= a || b <= l) return;
@@ -84,10 +80,39 @@ public:
 
 };
 
-void exec(){
+class StarrySkyTreeMin : public StarrySkyTree {
+  using StarrySkyTree::StarrySkyTree;
+protected:
+  // 木の子から親を定義する関数
+  ll _func(ll a, ll b){
+    return min(a, b);
+  }
+
+  // 木のインデックス範囲外の時に返すデフォルト値
+  ll _getDefaultValue(){
+    return INT_MAX;
+  }
+};
+
+class StarrySkyTreeMax : public StarrySkyTree {
+  using StarrySkyTree::StarrySkyTree;
+protected:
+  // 木の子から親を定義する関数
+  ll _func(ll a, ll b){
+    return max(a, b);
+  }
+
+  // 木のインデックス範囲外の時に返すデフォルト値
+  ll _getDefaultValue(){
+    return -INT_MAX;
+  }
+};
+
+
+void execMin(){
   int n = 10;
   int diff = -5;
-  StarrySkyTree sst = StarrySkyTree(n);
+  StarrySkyTreeMin sst = StarrySkyTreeMin(n);
   for (int i = 0; i < n; i++){
     sst.add(i, i, i - diff);
   }
@@ -100,6 +125,28 @@ void exec(){
     }
   }
 
+}
+
+void execMax(){
+  int n = 10;
+  int diff = -5;
+  StarrySkyTreeMax sst = StarrySkyTreeMax(n);
+  for (int i = 0; i < n; i++){
+    sst.add(i, i, i - diff);
+  }
+
+  for (int i = 0; i < n; i++){
+    for (int j = i; j < n; j++){
+      ll tmp = sst.get(i, j);
+      assert(tmp == j - diff);
+      printf("[%d, %d] = %lld\n", i, j, tmp);
+    }
+  }
+
+}
+
+void exec(){
+  execMax();
 }
 
 void solve(){
