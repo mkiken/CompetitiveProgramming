@@ -12,6 +12,7 @@ using namespace std;
 
 typedef long long ll;
 typedef unsigned long long ull;
+typedef long double ld;
 typedef vector<int> VI;
 typedef pair<int, int> ipair;
 typedef tuple<int, int, int> ituple;
@@ -19,7 +20,7 @@ typedef tuple<int, int, int> ituple;
 // const ll INF = LLONG_MAX;
 // const int MOD = (int)1e9 + 7;
 // const double EPS = 1e-10;
-
+#define PI acosl(-1)
 #define MAX_N 100 + 2
 
 void exec(){
