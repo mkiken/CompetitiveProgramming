@@ -1,12 +1,12 @@
 #include <algorithm>
 #include <cassert>
+#include <climits>
 #include <cmath>
 #include <iostream>
 #include <map>
 #include <queue>
 #include <string>
 #include <vector>
-#include <climits>
 
 using namespace std;
 
@@ -59,6 +59,7 @@ protected:
 
 public:
   StarrySkyTree(int n){
+    assert(n <= SIZE);
     size = n;
   }
 
