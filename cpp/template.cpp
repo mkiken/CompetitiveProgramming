@@ -14,6 +14,7 @@ typedef long long ll;
 typedef unsigned long long ull;
 typedef long double ld;
 typedef vector<int> VI;
+typedef vector<ll> VL;
 typedef pair<int, int> ipair;
 typedef tuple<int, int, int> ituple;
 
