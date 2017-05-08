@@ -49,14 +49,11 @@ protected:
     }
 public:
     SegmentTree2D(){}
-    SegmentTree2D(vector< VI > &f) {
+
+    void init(vector< VI > &f) {
         H = W = 1;
         while(H < (int)f.size()) H <<= 1;
         while(W < (int)f[0].size()) W <<= 1;
-        init(f);
-    }
-
-    void init(vector< VI > &f) {
         dat.assign(2*H-1,VL(2*W-1, _getDefaultValue()));
         for (int i = 0; i < (int)f.size(); i++)
             for (int j = 0; j < (int)f[0].size(); j++)
@@ -100,7 +97,7 @@ protected:
   }
 };
 
-void exec(){
+void exec_min(){
     int h = 4, w = 3, weight = 3;
     vector< VI > v;
 
@@ -112,8 +109,32 @@ void exec(){
         v.push_back(tmp);
     }
 
-    // SegmentTree2DMin st2 = SegmentTree2DMin(v);
     SegmentTree2DMin st2 = SegmentTree2DMin();
+    st2.init(v);
+
+    cout << st2.query(0, 0, h, w) << endl;
+    cout << st2.query(0, 0, 0, 0) << endl;
+    cout << st2.query(1, 1, 1, 1) << endl;
+    cout << st2.query(1, 1, h, w) << endl;
+    cout << st2.query(h - 1, w - 1, h - 1, w - 1) << endl;
+
+
+}
+
+void exec_max(){
+    int h = 4, w = 3, weight = 3;
+    vector< VI > v;
+
+    for (int i = 0; i < h; i++){
+        VI tmp;
+        for (int j = 0; j < w; j++){
+            tmp.push_back(i + j + weight);
+        }
+        v.push_back(tmp);
+    }
+
+    SegmentTree2DMax st2 = SegmentTree2DMax();
+    st2.init(v);
 
     cout << st2.query(0, 0, h, w) << endl;
     cout << st2.query(0, 0, 0, 0) << endl;
@@ -128,7 +149,7 @@ void solve(){
   int t = 1;
   // scanf("%d", &t);
   for (int i = 0; i < t; i++){
-    exec();
+    exec_max();
   }
 }
 
