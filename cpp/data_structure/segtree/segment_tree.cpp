@@ -26,7 +26,8 @@ class StarrySkyTree{
 protected:
 
   const static int SIZE = 1 << 17;
-  ll seg[SIZE * 2 + 2], segAdd[SIZE * 2 + 2];
+  const static int DATA_SIZE = SIZE * 2 + 2;
+  ll seg[DATA_SIZE], segAdd[DATA_SIZE];
   int size;
 
   // 木の子から親を定義する関数
@@ -61,6 +62,10 @@ public:
   StarrySkyTree(int n){
     assert(n <= SIZE);
     size = n;
+    for (int i = 0; i < DATA_SIZE; i++){
+      seg[i] = 0;
+      segAdd[i] = 0;
+    }
   }
 
   /**
@@ -109,6 +114,38 @@ protected:
   }
 };
 
+void execMaxLarge(){
+  int n = 100000;
+  int diff = -5;
+  StarrySkyTreeMax sst = StarrySkyTreeMax(n);
+  for (int i = 0; i < n; i++){
+    sst.add(i, i, i - diff);
+  }
+
+    for (int j = 0; j < n; j++){
+      ll tmp = sst.get(0, j);
+      assert(tmp == j - diff);
+    }
+
+}
+
+void execMinLarge(){
+  int n = 100000;
+  int diff = -500000;
+  StarrySkyTreeMin sst = StarrySkyTreeMin(n);
+  for (int i = 0; i < n; i++){
+    sst.add(i, i, i - diff);
+  }
+
+  for (int i = 0; i < n; i++){
+    ll tmp = sst.get(i, n-1);
+    if (tmp != i - diff){
+      printf("[%d, %d] = %lld\n", i, n-1, tmp);
+      assert(tmp == i - diff);
+    }
+  }
+
+}
 
 void execMin(){
   int n = 10;
@@ -147,7 +184,8 @@ void execMax(){
 }
 
 void exec(){
-  execMin();
+  // execMinLarge();
+  execMaxLarge();
 }
 
 void solve(){
