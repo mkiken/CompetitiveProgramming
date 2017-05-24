@@ -1,71 +1,206 @@
-#include <vector>
+#include <algorithm>
+#include <cassert>
+#include <climits>
+#include <cmath>
+#include <iostream>
 #include <map>
-#include <time.h>
-#define INF (int)1.0e9;
-#define MAX_V 100
+#include <queue>
+#include <string>
+#include <vector>
+
 using namespace std;
 
-typedef pair<int, int> P;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double ld;
+typedef vector<int> VI;
+typedef vector<ll> VL;
+typedef pair<int, int> ipair;
+typedef tuple<int, int, int> ituple;
 
-//from wikipedia
-//http://ja.wikipedia.org/wiki/%E3%83%99%E3%83%AB%E3%83%9E%E3%83%B3-%E3%83%95%E3%82%A9%E3%83%BC%E3%83%89%E6%B3%95
-void BellmanFord(int V, vector<P> edges, int source){
-   // この実装では、グラフを頂点のリストと辺のリストで表す。
-   // そして、各頂点の distance と predecessor 属性が
-   // 最短経路を格納するよう変更していく。
-   int dist[MAX_V];
-   int pred[MAX_V];
+const ll INF = LLONG_MAX;
+// const int MOD = (int)1e9 + 7;
+// const double EPS = 1e-10;
+#define PI acosl(-1)
+#define MAX_N 100 + 2
 
-   // Step 1: グラフの初期化
-   for(int i = 0; i < V; i++){
-       if (i == source) dist[i] = 0;
-       else dist[i] = INF;
-       pred[i] = -1;
-   }
+/**
+ * O(|E||V|)
+ */
+class BellmanFord{
+  const static int MAX_VERTEX = 10000;
+  const static int MAX_EDGE = 10000;
 
-   // Step 2: 辺の緩和を反復
-   for (int k = 0; k < V; k++){ //
-       for (int i = 0;  i < edges.size(); i++){ // uv は u から v に向かう辺
-           int u = edges[i].first;
-           int v = edges[i].second; //
-           if (dist[u] + 1 < dist[v]){
-               dist[v] = dist[u] + 1;
-               pred[v] = u;
-           }
-       }
+protected:
+  int V, E;
+  int from[MAX_EDGE], to[MAX_EDGE];
+  ll cost[MAX_EDGE];
+  bool isNegativeLoop = false;
 
-   // Step 3: 負の重みの閉路がないかチェック
-   // for each edge uv in edges:
-       // u := uv.source
-       // v := uv.destination
-       // if u.distance + uv.weight < v.distance:
-           // error "Graph contains a negative-weight cycle"
+public:
+  BellmanFord(int v, int e){
+    assert(v <= MAX_VERTEX);
+    assert(e <= MAX_EDGE);
+    V = v;
+    E = 0;
   }
-   // for(int i = 0; i < n; i++){
-      // printf("");
-   // }
-   // int pos = source;
-   // while(pos != -1){
-      // printf("%d ", pos);
-      // pos = pred[pos];
-   // }
-   // printf("\n");
 
+  void addEdge(int f, int t, ll c){
+    from[E] = f;
+    to[E] = t;
+    cost[E] = c;
+    E++;
+  }
+
+  /**
+   * 負の閉路がない場合: 各頂点への最短経路
+   * 負の閉路がある場合: 空のvector
+   */
+  vector<ll> shortestPath(int start){
+    vector<ll> result(V, INF);
+    result[start] = 0;
+    int count = 0;
+
+    while (true){
+      bool isUpdate = false;
+      for (int i = 0; i < E; i++){
+        if (result[from[i]] != INF && (result[to[i]] > result[from[i]] + cost[i])){
+          result[to[i]] = result[from[i]] + cost[i];
+          isUpdate = true;
+        }
+      }
+      if (!isUpdate){
+        break;
+      }
+      count++;
+      if (count == V){
+        // 負の閉路がある
+        isNegativeLoop = true;
+        break;
+      }
+    }
+    return result;
+  }
+
+  /* 負閉路があるかどうか */
+  bool hasNegativeLoop(){
+    return isNegativeLoop;
+  }
+
+  /**
+   * shortestPathの結果を使って負閉路を出す
+   */
+  vector<bool> findNegativeLoop(vector<ll> result){
+    vector<bool> negative(V, false);
+    for (int j = 0; j < V; j++){
+      for (int i = 0; i < E; i++){
+        if (result[from[i]] != INF && (result[to[i]] > result[from[i]] + cost[i])){
+          result[to[i]] = result[from[i]] + cost[i];
+          negative[to[i]] = true;
+        }
+
+        if (negative[from[i]]){
+          negative[to[i]] = true;
+        }
+      }
+    }
+
+    return negative;
+  }
+
+};
+
+void case4(){
+  BellmanFord bf = BellmanFord(4, 4);
+  bf.addEdge(0, 3, -1000000000);
+  bf.addEdge(0, 1, -1);
+  bf.addEdge(1, 2, -1);
+  bf.addEdge(2, 1, -1);
+  vector<ll> result = bf.shortestPath(0);
+
+  for (int i = 0; i < result.size(); i++){
+    printf("%d: %lld\n", i, result[i]);
+  }
+
+  vector<bool> negative = bf.findNegativeLoop(result);
+  for (int i = 0; i < result.size(); i++){
+    printf("negative %d: %d\n", i, (int)negative[i]);
+  }
+}
+
+void case3(){
+  BellmanFord bf = BellmanFord(6, 5);
+  bf.addEdge(0, 1, 1000000000);
+  bf.addEdge(1, 2, 1000000000);
+  bf.addEdge(2, 3, 1000000000);
+  bf.addEdge(3, 4, 1000000000);
+  bf.addEdge(4, 5, 1000000000);
+  vector<ll> result = bf.shortestPath(0);
+
+  for (int i = 0; i < result.size(); i++){
+    printf("%d: %lld\n", i, result[i]);
+  }
+
+  vector<bool> negative = bf.findNegativeLoop(result);
+  for (int i = 0; i < result.size(); i++){
+    printf("negative %d: %d\n", i, (int)negative[i]);
+  }
+}
+
+void case2(){
+  BellmanFord bf = BellmanFord(2, 2);
+  bf.addEdge(0, 1, -1);
+  bf.addEdge(1, 0, -1);
+  vector<ll> result = bf.shortestPath(0);
+
+  for (int i = 0; i < result.size(); i++){
+    printf("%d: %lld\n", i, result[i]);
+  }
+
+  vector<bool> negative = bf.findNegativeLoop(result);
+  for (int i = 0; i < result.size(); i++){
+    printf("negative %d: %d\n", i, (int)negative[i]);
+  }
+}
+
+void case1(){
+  BellmanFord bf = BellmanFord(3, 3);
+  bf.addEdge(0, 1, -4);
+  bf.addEdge(1, 2, -3);
+  bf.addEdge(0, 3, -5);
+  vector<ll> result = bf.shortestPath(0);
+
+  for (int i = 0; i < result.size(); i++){
+    printf("%d: %lld\n", i, result[i]);
+  }
+
+  vector<bool> negative = bf.findNegativeLoop(result);
+  for (int i = 0; i < result.size(); i++){
+    printf("negative %d: %d\n", i, (int)negative[i]);
+  }
+}
+
+void exec(){
+  cout << "------------------------------" << endl;
+  case1();
+  cout << "------------------------------" << endl;
+  case2();
+  cout << "------------------------------" << endl;
+  case3();
+  cout << "------------------------------" << endl;
+  case4();
+  cout << "------------------------------" << endl;
+}
+
+void solve(){
+  int t = 1;
+  // scanf("%d", &t);
+  for (int i = 0; i < t; i++){
+    exec();
+  }
 }
 
 int main(){
-	int n, from, to, V;
-	vector<P> edge;
-	scanf("%d%d", &V, &n);
-	clock_t start, end;
-	for(int i = 0; i < n; i++){
-		scanf("%d%d", &from, &to);
-		edge.push_back(P(from, to));
-	}
-	start = clock();
-	for(int i = 0; i < n; i++) BellmanFord(V, edge, i);
-	end = clock();
-	printf("%.9f秒かかりました\n",(double)(end-start)/CLOCKS_PER_SEC);
-
-		return 0;
+  solve();
+  return 0;
 }
