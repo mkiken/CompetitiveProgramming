@@ -21,12 +21,14 @@ typedef tuple<int, int, int> ituple;
 class Trie {
 protected:
   static const int CHAR_SIZE = 27;
-  char value;
+  char value = ' ';
   bool isRoot = false;
   Trie *next[CHAR_SIZE];
 
   void _initialize(){
-    fill(next, next+CHAR_SIZE, (Trie*)0);
+    for (int i = 0; i < CHAR_SIZE; i++){
+      next[i] = NULL;
+    }
   }
 public:
   Trie() {
