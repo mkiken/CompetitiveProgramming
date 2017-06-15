@@ -25,15 +25,11 @@ typedef tuple<int, int, int> ituple;
 
 class UnionFind {
 protected:
-  const static int MAX = 100000 + 2;
+  const static int MAX = 100000 + 5;
   int par[MAX];
   int rank[MAX];
   int size;
 
-  int find(int x){
-    if(par[x] == x) return x;
-    else return par[x] = find(par[x]);
-  }
 public:
   UnionFind(){}
   UnionFind(int n) {
@@ -42,6 +38,10 @@ public:
       par[i] = i;
       rank[i] = 0;
     }
+  }
+  int find(int x){
+    if(par[x] == x) return x;
+    else return par[x] = find(par[x]);
   }
   void unite(int x, int y){
     x = find(x);
