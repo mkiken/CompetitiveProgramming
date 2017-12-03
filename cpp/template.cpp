@@ -18,11 +18,12 @@ typedef vector<ll> VL;
 typedef pair<int, int> ipair;
 typedef tuple<int, int, int> ituple;
 
+// const int INF = INT_MAX;
 // const ll INF = LLONG_MAX;
-// const int MOD = (int)1e9 + 7;
-// const double EPS = 1e-10;
+// const int MOD = ((int)1e9 + 7);
+// const ld EPS = (1e-10);
 #define PI acosl(-1)
-#define MAX_N 100 + 2
+#define MAX_N (100000 + 2)
 
 void exec(){
 
