@@ -70,9 +70,9 @@ template <typename T> T fpow(T n, T p){
   T ans = 1, ln = n;
   if(p <= 0) return 1;
   while(p != 0){
-	if((p & 1) == 1) ans = ans*ln;
-	ln = ln * ln;
-	p = p >> 1;
+    if((p & 1) == 1) ans = ans*ln;
+    ln = ln * ln;
+    p = p >> 1;
   }
   return ans;
 }
@@ -89,22 +89,24 @@ int powMod(ll n, int p){
   return (int)ans;
 }
 
-int gcd(int a, int b) {
+ll gcd(ll a, ll b) {
   return b != 0 ? gcd(b, a % b) : a;
 }
-int lcm(int a, int b) {
+
+ll lcm(ll a, ll b) {
   return a * b / gcd(a, b);
 }
 
 // a x + b y = gcd(a, b)
-int extgcd(int a, int b, int &x, int &y) {
+ll extgcd(ll a, ll b, ll &x, ll &y) {
   int g = a; x = 1; y = 0;
   if (b != 0) g = extgcd(b, a % b, y, x), y -= (a / b) * x;
   return g;
 }
+
 // 1/a mod m
-int mod_inverse(int a){
-  int x, y;
+ll mod_inverse(ll a){
+  ll x, y;
   extgcd(a, MOD, x, y);
   return (MOD + x % MOD) % MOD;
 }
@@ -206,8 +208,8 @@ int _powMod(int n, int p, int m){
 }
 
 // 1/a mod m
-int _mod_inverse(int a, int m){
-  int x, y;
+ll _mod_inverse(ll a, ll m){
+  ll x, y;
   extgcd(a, m, x, y);
   return (m + x % m) % m;
 }
