@@ -99,9 +99,16 @@ ll lcm(ll a, ll b) {
 
 // a x + b y = gcd(a, b)
 ll extgcd(ll a, ll b, ll &x, ll &y) {
-  int g = a; x = 1; y = 0;
+  ll g = a; x = 1; y = 0;
   if (b != 0) g = extgcd(b, a % b, y, x), y -= (a / b) * x;
   return g;
+}
+
+// 1/a mod m
+ll _mod_inverse(ll a, ll m){
+  ll x, y;
+  extgcd(a, m, x, y);
+  return (m + x % m) % m;
 }
 
 // 1/a mod m
@@ -205,13 +212,6 @@ int _powMod(int n, int p, int m){
 	p = p >> 1;
   }
   return (int)ans;
-}
-
-// 1/a mod m
-ll _mod_inverse(ll a, ll m){
-  ll x, y;
-  extgcd(a, m, x, y);
-  return (m + x % m) % m;
 }
 
 //n! mod m
