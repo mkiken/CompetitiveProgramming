@@ -71,16 +71,16 @@ ll bit[MAX_N + 1];
 void add(int idx, ll val, ll* ary){
   int p = idx+1;
   while(p < MAX_N){
-	ary[p] += val;
-	p += p & -p;
+    ary[p] += val;
+    p += p & -p;
   }
 }
 ll sum(int idx, ll *ary){
   ll res = 0;
   int p = idx+1;
   while(0 < p){
-	res += ary[p];
-	p -= p & -p;
+    res += ary[p];
+    p -= p & -p;
   }
   return res;
 }
