@@ -45,7 +45,7 @@ const double EPS = 1e-10;
 //Segment Tree for sum value.
 ll all[MAX_SIZE], part[MAX_SIZE];
 //区間[a, b)に値xを加算する.
-void _addSum(int a, int b, int x, int k, int l, int r){
+void _addSum(int a, int b, ll x, int k, int l, int r){
   if (a <= l && r <= b) all[k] += x;
   else if (l < b && a < r){
 	part[k] += (min(b, r) - max(a, l)) * x;
@@ -69,7 +69,7 @@ ll _getSum(int a, int b, int k, int l, int r){
  * 区間[a, b]に値xを加算する.
  * sizeは木の要素数
  */
-void addSum(int a, int b, int x, int size){
+void addSum(int a, int b, ll x, int size){
   _addSum(a, b+1, x, 0, 0, size+1);
 }
 

@@ -20,12 +20,10 @@ typedef tuple<int, int, int> ituple;
 // const int MOD = (int)1e9 + 7;
 // const double EPS = 1e-10;
 
-#define MAX_N 100 + 2
-
 class StarrySkyTree{
 protected:
 
-  const static int SIZE = 1 << 17;
+  const static int SIZE = 1 << 17; // 131072
   const static int DATA_SIZE = SIZE * 2 + 2;
   ll seg[DATA_SIZE], segAdd[DATA_SIZE];
   int size;
@@ -36,7 +34,7 @@ protected:
   // 木のインデックス範囲外の時に返すデフォルト値
   virtual ll _getDefaultValue() = 0;
 
-  void _add(int a, int b, int x, int k, int l, int r){
+  void _add(int a, int b, ll x, int k, int l, int r){
     if (r <= a || b <= l) return;
     if (a <= l && r <= b){
       segAdd[k] += x;
@@ -72,7 +70,7 @@ public:
   * 区間[a, b]に値xを加算する.
   * sizeは木の要素数
   */
-  void add(int a, int b, int x){
+  void add(int a, int b, ll x){
     _add(a, b+1, x, 0, 0, size+1);
   }
 
