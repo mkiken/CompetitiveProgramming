@@ -16,11 +16,13 @@ typedef long double ld;
 typedef vector<int> VI;
 typedef vector<ll> VL;
 typedef pair<int, int> ipair;
+typedef pair<ll, ll> lpair;
 typedef tuple<int, int, int> ituple;
 
 // const ll INF = LLONG_MAX;
 // const int MOD = (int)1e9 + 7;
 // const double EPS = 1e-10;
+
 #define PI acosl(-1)
 #define MAX_N 100 + 2
 
@@ -34,28 +36,28 @@ public:
     maxNum = (ll)primes[primes.size()-1] * primes[primes.size()-1];
   }
 
-  vector<ipair> factorize(ll n){
+  vector<lpair> factorize(ll n){
     assert(n <= maxNum);
 
-    vector<ipair> result;
-    int threshold = (int)sqrt(n) + 1;
+    vector<lpair> result;
+    ll threshold = (ll)sqrt(n) + 1;
 
     for (int i = 0; i < primes.size(); i++){
       if (n < primes[i] || threshold < primes[i]){
         break;
       }
-      int div = 0;
+      ll div = 0;
       while (n % primes[i] == 0){
         div++;
         n /= primes[i];
       }
       if (div){
-        result.push_back(make_pair(primes[i], div));
+        result.push_back(lpair(primes[i], div));
       }
     }
 
     if (n > 1){
-      result.push_back(ipair(n, 1));
+      result.push_back(lpair(n, 1));
     }
 
     return result;
@@ -68,7 +70,7 @@ protected:
 };
 
 void check(int n, PrimeFactorizer pf){
-    vector<ipair> factors = pf.factorize(n);
+    vector<lpair> factors = pf.factorize(n);
     printf("----- result %d -----\n", n);
     for (int j = 0; j < factors.size(); j++){
       ipair e = factors[j];

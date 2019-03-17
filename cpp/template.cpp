@@ -16,6 +16,7 @@ typedef long double ld;
 typedef vector<int> VI;
 typedef vector<ll> VL;
 typedef pair<int, int> ipair;
+typedef pair<ll, ll> lpair;
 typedef tuple<int, int, int> ituple;
 
 // const int INF = INT_MAX;
