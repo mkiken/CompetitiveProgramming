@@ -81,6 +81,8 @@ void doIt2(){
 void all_permutate(int n){
   vector<int> v(n, 0);
   for(int i = 0; i < n; i++) v[i] = i;
+  // 昇順ソートしないといけない
+  sort(v.begin(), v.end());
   do{
     //do action
     cout << 1 << endl;

@@ -29,6 +29,8 @@ void doIt(){
   }
   mmap[3] = 4;
   mmap[3] = 5;
+  mmap[7] = 2;
+  mmap[1] = 1;
   it = mmap.begin();
   while( it != mmap.end() )
   {
