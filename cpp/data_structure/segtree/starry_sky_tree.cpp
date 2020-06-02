@@ -12,26 +12,21 @@ using namespace std;
 
 typedef long long ll;
 typedef unsigned long long ull;
-typedef long double ld;
 typedef vector<int> VI;
-typedef vector<ll> VL;
 typedef pair<int, int> ipair;
-typedef pair<ll, ll> lpair;
 typedef tuple<int, int, int> ituple;
 
-const int INF = INT_MAX;
-// const ll INF = LLONG_MAX;
-// const int MOD = ((int)1e9 + 7);
-// const ld EPS = (1e-10);
-#define PI acosl(-1)
-#define MAX_N (300000 + 2)
+// const int INF = (int)2e9;
+// const int MOD = (int)1e9 + 7;
+// const double EPS = 1e-10;
 
-class SegmentTree {
+class StarrySkyTree{
 protected:
-  const static int SIZE = 1 << 18; // 262144
+
+  const static int SIZE = 1 << 17; // 131072
   const static int DATA_SIZE = SIZE * 2 + 2;
-  int N;
-  ll seg[DATA_SIZE];
+  ll seg[DATA_SIZE], segAdd[DATA_SIZE];
+  int size;
 
   // 木の子から親を定義する関数
   virtual ll _func(ll a, ll b) = 0;
@@ -39,43 +34,58 @@ protected:
   // 木のインデックス範囲外の時に返すデフォルト値
   virtual ll _getDefaultValue() = 0;
 
-  ll _get(int a, int b, int k, int l, int r) {
-    if(r <= a or b <= l) return _getDefaultValue();
-    if(a <= l and r <= b) return seg[k];
-    int m = (l + r) / 2;
-    return _func(_get(a, b, k*2+1, l, m), _get(a, b, k*2+2, m, r));
+  void _add(int a, int b, ll x, int k, int l, int r){
+    if (r <= a || b <= l) return;
+    if (a <= l && r <= b){
+      segAdd[k] += x;
+      while (k){
+        k = (k - 1) / 2;
+        seg[k] = _func(seg[k * 2 + 1] + segAdd[k * 2 + 1], seg[k * 2 + 2] + segAdd[k * 2 + 2]);
+      }
+      return;
+    }
+    _add(a, b, x, k * 2 + 1, l, (l + r) / 2);
+    _add(a, b, x, k * 2 + 2, (l + r) / 2, r);
+  }
+
+  ll _get(int a, int b, int k, int l, int r){
+    if (r <= a || b <= l) return _getDefaultValue();
+    if (a <= l && r <= b) return (seg[k] + segAdd[k]);
+    ll left = _get(a, b, k * 2 + 1, l, (l + r) / 2);
+    ll right = _get(a, b, k * 2 + 2, (l + r) / 2, r);
+    return _func(left, right) + segAdd[k];
   }
 
 public:
-  SegmentTree(int n) {
+  StarrySkyTree(int n){
     assert(n <= SIZE);
-    N = 1;
-    while(N < n) N *= 2;
-    assert(N <= DATA_SIZE);
-    for(int i = 0; i < 2*N-1; i++) {
+    size = n;
+    for (int i = 0; i < DATA_SIZE; i++){
       seg[i] = 0;
+      segAdd[i] = 0;
     }
   }
 
-  // k個目の要素をaに更新
-  void set(int k, ll a) {
-    k += N-1;
-    seg[k] = a;
-    while(k > 0) {
-      k = (k - 1) / 2;
-      seg[k] = _func(seg[k*2+1], seg[k*2+2]);
-    }
+  /**
+  * 区間[a, b]に値xを加算する.
+  * sizeは木の要素数
+  */
+  void add(int a, int b, ll x){
+    _add(a, b+1, x, 0, 0, size+1);
   }
 
-  // 区間[a, b]のクエリ結果を取得
-  ll get(int a, int b) {
-    int result = _get(a, b+1, 0, 0, N);
-    return result;
+  /**
+  * 区間[a, b]のクエリ結果を取得.
+  * sizeは木の要素数
+  */
+  ll get(int a, int b){
+    return _get(a, b+1, 0, 0, size+1);
   }
+
 };
 
-class SegmentTreeMin : public SegmentTree {
-  using SegmentTree::SegmentTree;
+class StarrySkyTreeMin : public StarrySkyTree {
+  using StarrySkyTree::StarrySkyTree;
 protected:
   // 木の子から親を定義する関数
   ll _func(ll a, ll b){
@@ -88,8 +98,8 @@ protected:
   }
 };
 
-class SegmentTreeMax : public SegmentTree {
-  using SegmentTree::SegmentTree;
+class StarrySkyTreeMax : public StarrySkyTree {
+  using StarrySkyTree::StarrySkyTree;
 protected:
   // 木の子から親を定義する関数
   ll _func(ll a, ll b){
@@ -102,8 +112,8 @@ protected:
   }
 };
 
-class SegmentTreeSum : public SegmentTree {
-  using SegmentTree::SegmentTree;
+class StarrySkyTreeSum : public StarrySkyTree {
+  using StarrySkyTree::StarrySkyTree;
 protected:
   // 木の子から親を定義する関数
   ll _func(ll a, ll b){
@@ -117,11 +127,11 @@ protected:
 };
 
 void execMaxLarge(){
-  int n = 200000;
+  int n = 100000;
   int diff = -5;
-  SegmentTreeMax sst = SegmentTreeMax(n);
+  StarrySkyTreeMax sst = StarrySkyTreeMax(n);
   for (int i = 0; i < n; i++){
-    sst.set(i, i - diff);
+    sst.add(i, i, i - diff);
   }
 
   for (int j = 0; j < n; j++){
@@ -131,11 +141,11 @@ void execMaxLarge(){
 }
 
 void execMinLarge(){
-  int n = 200000;
+  int n = 100000;
   int diff = -500000;
-  SegmentTreeMin sst = SegmentTreeMin(n);
+  StarrySkyTreeMin sst = StarrySkyTreeMin(n);
   for (int i = 0; i < n; i++){
-    sst.set(i, i - diff);
+    sst.add(i, i, i - diff);
   }
 
   for (int i = 0; i < n; i++){
@@ -150,9 +160,9 @@ void execMinLarge(){
 void execMin(){
   int n = 10;
   int diff = -5;
-  SegmentTreeMin sst = SegmentTreeMin(n);
+  StarrySkyTreeMin sst = StarrySkyTreeMin(n);
   for (int i = 0; i < n; i++){
-    sst.set(i, i - diff);
+    sst.add(i, i, i - diff);
   }
 
   for (int i = 0; i < n; i++){
@@ -168,9 +178,9 @@ void execMin(){
 void execMax(){
   int n = 10;
   int diff = -5;
-  SegmentTreeMax sst = SegmentTreeMax(n);
+  StarrySkyTreeMax sst = StarrySkyTreeMax(n);
   for (int i = 0; i < n; i++){
-    sst.set(i, i - diff);
+    sst.add(i, i, i - diff);
   }
 
   for (int i = 0; i < n; i++){
@@ -185,9 +195,9 @@ void execMax(){
 void execSum(){
   int n = 10;
   int diff = -5;
-  SegmentTreeSum sst = SegmentTreeSum(n);
+  StarrySkyTreeSum sst = StarrySkyTreeSum(n);
   for (int i = 0; i < n; i++){
-    sst.set(i, i - diff);
+    sst.add(i, i, i - diff);
   }
 
   for (int i = 0; i < n; i++){
@@ -197,12 +207,11 @@ void execSum(){
     }
   }
 }
+
 void exec(){
-  // execSum();
-  // execMax();
-  // execMin();
-  execMaxLarge();
-  execMinLarge();
+  // execMinLarge();
+  // execMaxLarge();
+  execSum();
 }
 
 void solve(){
@@ -215,6 +224,5 @@ void solve(){
 
 int main(){
   solve();
-  // test();
   return 0;
 }
