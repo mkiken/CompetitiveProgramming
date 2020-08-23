@@ -38,6 +38,12 @@ public:
     data.assign(n, vector<ld>(m));
   }
 
+  Matrix2D(vector<vector<ld>> v) {
+    N = v.size();
+    M = v[0].size();
+    data = v;
+  }
+
   int getN() const {
     return N;
   }
@@ -178,24 +184,47 @@ public:
 };
 
 void testDet() {
-  vector<vector<double>> data = {
-    {1, 1, 0},
-    {1, 0, 1},
-    {0, 1, 1},
-  };
-
-
-  Matrix2D A = Matrix2D(data.size(), data[0].size());
-  for (int i = 0; i < (int)data.size(); i++){
-    for (int j = 0; j < (int)data[0].size(); j++){
-      A.setValue(i, j, data[i][j]);
+  assert(Matrix2D(
+    {
+      {1, 1, 0},
+      {1, 0, 1},
+      {0, 1, 1},
     }
-  }
-  A.debugPrint();
-  A.swapRow(0, 1);
-  A.debugPrint();
-  cout << A.det() << endl;
+  ).det()== -2);
 
+  assert(Matrix2D(
+    {
+      {1, 1, 0},
+      {1, 1, 1},
+      {0, 1, 1},
+    }
+  ).det()== -1);
+
+  assert(Matrix2D(
+    {
+      {0, 0},
+      {0, 0},
+    }
+  ).det()== 0);
+
+  assert(Matrix2D(
+    {
+      {0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+      {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+      {0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+      {0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+      {1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0},
+      {1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+      {1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0},
+      {1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+      {1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0},
+      {1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+      {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+      {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+    }
+  ).det()== 0);
+
+  printf("testGet passed.\n");
 }
 
 void exec(){
