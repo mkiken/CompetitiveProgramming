@@ -26,21 +26,23 @@ const ld EPS = (1e-10);
 #define PI acosl(-1)
 #define MAX_N (200000 + 2)
 
-template <class T, int H, int W = H> class Matrix2D {
+template <class T> class Matrix2D {
 public:
-  int h,w;
-  array<array<T,W>,H> a;
-  Matrix2D():h(H),w(W){
-    // do nothing
+  int H,W;
+  vector<vector<T>> a;
+  Matrix2D(int h, int w){
+    H = h;
+    W = w;
+    a.assign(h, vector<T>(w));
   }
-  Matrix2D(const vector<vector<T>>& vec):h(H),w(W) {
-    assert(vec.size()==H && vec.front().size()==W);
-    for(int i = 0; i < H; ++i) for(int j = 0; j < W; ++j) a[i][j]=vec[i][j];
+  Matrix2D(const vector<vector<T>>& vec) {
+    H = vec.size();
+    W = vec.front().size();
+    a = vec;
   }
-  static Matrix2D identity() {
-    assert(H==W);
-    Matrix2D res = Matrix2D();
-    for(int i = 0; i < H; ++i) res[i][i]=1;
+  static Matrix2D<T> identity(int n) {
+    Matrix2D<T> res = Matrix2D(n, n);
+    for(int i = 0; i < res.H; ++i) res[i][i]=1;
     return res;
   }
   Matrix2D &operator+=(const Matrix2D &r) {
@@ -69,10 +71,10 @@ public:
   Matrix2D operator*(const Matrix2D& r) const {
     return Matrix2D(*this) *= r;
   }
-  inline array<T,W> &operator[](int i) {
+  inline vector<T> &operator[](int i) {
     return a[i];
   }
-  inline const array<T,W> &operator[](int i) const {
+  inline const vector<T> &operator[](int i) const {
     return a[i];
   }
   Matrix2D pow(ll K) const {
@@ -117,7 +119,7 @@ public:
 
 
 void testDet() {
-  assert((Matrix2D<ld, 3>(
+  assert((Matrix2D<ld>(
     {
       {1, 1, 0},
       {1, 0, 1},
@@ -125,7 +127,7 @@ void testDet() {
     }
   ).determinant()) == -2);
 
-  assert((Matrix2D<ld, 3>(
+  assert((Matrix2D<ld>(
     {
       {1, 1, 0},
       {1, 1, 1},
@@ -133,14 +135,14 @@ void testDet() {
     }
   ).determinant()) == -1);
 
-  assert((Matrix2D<ld, 2>(
+  assert((Matrix2D<ld>(
     {
       {0, 0},
       {0, 0},
     }
   ).determinant())== 0);
 
-  assert((Matrix2D<ld, 12>(
+  assert((Matrix2D<ld>(
     {
       {0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
       {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
