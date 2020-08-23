@@ -152,6 +152,17 @@ public:
     return r;
   }
 
+  void debugPrint() {
+    cout << "------------------------" << endl;
+    for (int i = 0; i < getN(); i++){
+      printf("%2d: ", i);
+      for (int j = 0; j < getM(); j++){
+        printf("%.2Lf%c", getValue(i, j), j == getM() - 1 ? '\n' : ' ');
+      }
+    }
+    cout << "------------------------\n" << endl;
+  }
+
   /**
   ** 単位行列
   */
@@ -173,7 +184,16 @@ void testDet() {
     {0, 1, 1},
   };
 
+
   Matrix2D A = Matrix2D(data.size(), data[0].size());
+  for (int i = 0; i < (int)data.size(); i++){
+    for (int j = 0; j < (int)data[0].size(); j++){
+      A.setValue(i, j, data[i][j]);
+    }
+  }
+  A.debugPrint();
+  A.swapRow(0, 1);
+  A.debugPrint();
   cout << A.det() << endl;
 
 }
