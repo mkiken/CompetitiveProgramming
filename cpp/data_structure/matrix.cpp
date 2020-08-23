@@ -26,188 +26,121 @@ const ld EPS = (1e-10);
 #define PI acosl(-1)
 #define MAX_N (200000 + 2)
 
-class Matrix2D {
-protected:
-  int N, M;
-  vector<vector<ld>> data;
-
+template <class T, int H, int W = H> class Matrix2D {
 public:
-  Matrix2D(int n, int m) {
-    N = n;
-    M = m;
-    data.assign(n, vector<ld>(m));
+  int h,w;
+  array<array<T,W>,H> a;
+  Matrix2D():h(H),w(W){
+    // do nothing
   }
-
-  Matrix2D(vector<vector<ld>> v) {
-    N = v.size();
-    M = v[0].size();
-    data = v;
+  Matrix2D(const vector<vector<T>>& vec):h(H),w(W) {
+    assert(vec.size()==H && vec.front().size()==W);
+    for(int i = 0; i < H; ++i) for(int j = 0; j < W; ++j) a[i][j]=vec[i][j];
   }
-
-  int getN() const {
-    return N;
+  static Matrix2D identity() {
+    assert(H==W);
+    Matrix2D res = Matrix2D();
+    for(int i = 0; i < H; ++i) res[i][i]=1;
+    return res;
   }
-
-  int getM() const {
-    return M;
+  Matrix2D &operator+=(const Matrix2D &r) {
+    assert(H==r.h&&W==r.w);
+    for(int i = 0; i < H; ++i) for(int j = 0; j < W; ++j) a[i][j]+=r[i][j];
+    return *this;
   }
-
-  void setValue(int n, int m, ld value) {
-    data[n][m] = value;
+  Matrix2D &operator-=(const Matrix2D &r) {
+    assert(H==r.h&&W==r.w);
+    for(int i = 0; i < H; ++i) for(int j = 0; j < W; ++j) a[i][j]-=r[i][j];
+    return *this;
   }
-
-  ld getValue(int n, int m) const {
-    return data[n][m];
+  Matrix2D &operator*=(const Matrix2D &r) {
+    assert(W==r.h);
+    Matrix2D res = Matrix2D();
+    for(int i = 0; i < H; ++i) for(int j = 0; j < r.w; ++j) for(int k = 0; k < W; ++k) res[i][j]+=(a[i][k])*(r[k][j]);
+    a.swap(res.a);
+    return *this;
   }
-
-  void swapRow(int n1, int n2) {
-    swap(data[n1], data[n2]);
+  Matrix2D operator+(const Matrix2D& r) const {
+    return Matrix2D(*this) += r;
   }
-
-  Matrix2D clone() {
-    Matrix2D A = Matrix2D(getN(), getM());
-    for (int i = 0; i < getN(); i++){
-      for (int j = 0; j < getM(); j++){
-        A.setValue(i, j, getValue(i, j));
-      }
+  Matrix2D operator-(const Matrix2D& r) const {
+    return Matrix2D(*this) -= r;
+  }
+  Matrix2D operator*(const Matrix2D& r) const {
+    return Matrix2D(*this) *= r;
+  }
+  inline array<T,W> &operator[](int i) {
+    return a[i];
+  }
+  inline const array<T,W> &operator[](int i) const {
+    return a[i];
+  }
+  Matrix2D pow(ll K) const {
+    assert(H == W);
+    Matrix2D x(*this);
+    Matrix2D res = this->identity();
+    for (; K > 0; K /= 2) {
+      if (K & 1) res *= x;
+      x *= x;
     }
-
-    return A;
-  }
-
-  /**
-  ** O(n^3)
-  */
-  Matrix2D multiply(const Matrix2D &B) {
-    Matrix2D C(getN(), B.getM());
-    for (int i = 0; i < getN(); ++i)
-    for (int j = 0; j < getM(); ++j)
-    for (int k = 0; k < getM(); ++k)
-    C.setValue(i, j, C.getValue(i, j) + data[i][k] * B.getValue(k, j));
-
-    return C;
+    return res;
   }
 
   /**
   ** 行列式
   ** O(n^3)
+  ** 除算が含まれているので、Tを適切に指定すること
   */
-  ld det() {
-    Matrix2D A = clone();
-
-    const int n = getN();
-    ld D = 1;
-    for (int i = 0; i < n; ++i) {
-      int pivot = i;
-      for (int j = i+1; j < n; ++j)
-      if (abs(A.getValue(j, i)) > abs(A.getValue(pivot, i))) pivot = j;
-      A.swapRow(pivot, i);
-      D *= A.getValue(i, i) * (i != pivot ? -1 : 1);
-      if (abs(A.getValue(i, i)) < EPS) break;
-      for(int j = i+1; j < n; ++j)
-      for(int k = n-1; k >= i; --k)
-      A.setValue(j, k, A.getValue(j, k) - (A.getValue(i, k) * A.getValue(j, i) / A.getValue(i, i)));
-    }
-    return D;
-  }
-
-  /**
-  ** 累乗
-  ** O(n^3 log e)
-  */
-  Matrix2D pow(int e) {
-    if (e == 0) {
-      return Matrix2D::identity(getN());
-    }
-
-    Matrix2D A = clone();
-    return e % 2 == 0 ? A.multiply(A).pow(e / 2) : A.multiply(A.pow(e - 1));
-  }
-
-  /**
-  ** O(n)
-  */
-  ld tr() {
-    ld ans = 0;
-    for (int i = 0; i < getN(); ++i)
-    ans += getValue(i, i);
-    return ans;
-  }
-
-  /**
-  ** O(n^3)
-  */
-  int rank() {
-    Matrix2D A = clone();
-    const int n = getN(), m = getM();
-    int r = 0;
-    for (int i = 0; r < n && i < m; ++i) {
-      int pivot = r;
-      for (int j = r+1; j < n; ++j) if (abs(A.getValue(j, i)) > abs(A.getValue(pivot, i))) pivot = j;
-      A.swapRow(pivot, r);
-      if (abs(A.getValue(r, i)) < EPS) continue;
-      for (int k = m-1; k >= i; --k) {
-        A.setValue(r, k, A.getValue(r, k) / A.getValue(r, i));
+  T determinant(void) const {
+    assert(H==W);
+    Matrix2D x(*this);
+    T res = 1;
+    for(int i = 0; i < H; i++) {
+      int idx = -1;
+      for(int j = i; j < W; j++) if(x[j][i] != 0) idx = j;
+      if(idx == -1) return 0;
+      if(i != idx) {
+        res *= -1;
+        swap(x[i], x[idx]);
       }
-      for(int j = r+1; j < n; ++j)
-      for(int k = i; k < m; ++k) {
-        A.setValue(j, k, A.getValue(j, k) - A.getValue(r, k) * A.getValue(j, i));
-      }
-      ++r;
-    }
-    return r;
-  }
-
-  void debugPrint() {
-    cout << "------------------------" << endl;
-    for (int i = 0; i < getN(); i++){
-      printf("%2d: ", i);
-      for (int j = 0; j < getM(); j++){
-        printf("%.2Lf%c", getValue(i, j), j == getM() - 1 ? '\n' : ' ');
+      res *= x[i][i];
+      T tmp = x[i][i];
+      for(int j = 0; j < W; ++j) x[i][j] /= tmp;
+      for(int j = i + 1; j < H; j++) {
+        tmp = x[j][i];
+        for(int k = 0; k < W; k++) x[j][k] -= x[i][k]*tmp;
       }
     }
-    cout << "------------------------\n" << endl;
-  }
-
-  /**
-  ** 単位行列
-  */
-  static Matrix2D identity(int n)
-  {
-    Matrix2D m = Matrix2D(n, n);
-    for (int i = 0; i < n; i++){
-      m.setValue(i, i, 1);
-    }
-
-    return m;
+    return res;
   }
 };
 
+
 void testDet() {
-  assert(Matrix2D(
+  assert((Matrix2D<ld, 3>(
     {
       {1, 1, 0},
       {1, 0, 1},
       {0, 1, 1},
     }
-  ).det()== -2);
+  ).determinant()) == -2);
 
-  assert(Matrix2D(
+  assert((Matrix2D<ld, 3>(
     {
       {1, 1, 0},
       {1, 1, 1},
       {0, 1, 1},
     }
-  ).det()== -1);
+  ).determinant()) == -1);
 
-  assert(Matrix2D(
+  assert((Matrix2D<ld, 2>(
     {
       {0, 0},
       {0, 0},
     }
-  ).det()== 0);
+  ).determinant())== 0);
 
-  assert(Matrix2D(
+  assert((Matrix2D<ld, 12>(
     {
       {0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
       {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -222,7 +155,7 @@ void testDet() {
       {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
       {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
     }
-  ).det()== 0);
+  ).determinant())== 0);
 
   printf("testGet passed.\n");
 }
