@@ -30,10 +30,36 @@ typedef tuple<int, int, int> ituple;
  * 素因数分解クラス
  */
 class PrimeFactorizer{
+
+protected:
+  VI primes;
+  ll maxNum;
+  vector<bool> isPrimeMap;
 public:
-  PrimeFactorizer(VI ps){
-    primes = ps;
-    maxNum = (ll)primes[primes.size()-1] * primes[primes.size()-1];
+  PrimeFactorizer(ll maxN){
+    maxNum = maxN;
+    int primeMaxN = (int)sqrt(maxN) + 1;
+    isPrimeMap = vector<bool>(1 + primeMaxN, true);
+    isPrimeMap[0] = false;
+    isPrimeMap[1] = false;
+    for (int i = 2; i <= primeMaxN; i++) {
+      if (isPrimeMap[i]) {
+        primes.push_back(i);
+        for (int j = 2 * i; j <= primeMaxN; j += i) {
+          isPrimeMap[j] = false;
+        }
+      }
+    }
+  }
+
+  // nが素数か判定
+  bool isPrime(int n){
+    return isPrimeMap[n];
+  }
+
+  // 素数リストを取得
+  vector<int> getPrimes(){
+    return primes;
   }
 
   vector<lpair> factorize(ll n){
@@ -42,7 +68,7 @@ public:
     vector<lpair> result;
     ll threshold = (ll)sqrt(n) + 1;
 
-    for (int i = 0; i < primes.size(); i++){
+    for (int i = 0; i < (int)primes.size(); i++){
       if (n < primes[i] || threshold < primes[i]){
         break;
       }
@@ -63,35 +89,23 @@ public:
     return result;
   }
 
-protected:
-  VI primes;
-  ll maxNum;
-
 };
 
 void check(int n, PrimeFactorizer pf){
     vector<lpair> factors = pf.factorize(n);
     printf("----- result %d -----\n", n);
-    for (int j = 0; j < factors.size(); j++){
+    for (int j = 0; j < (int)factors.size(); j++){
       ipair e = factors[j];
       printf("%d:[%d] = (%d, %d)\n", n, j, e.first, e.second);
     }
 }
 
 void exec(){
-  int org_data[] = {
-    2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397, 401, 409, 419, 421, 431, 433, 439, 443, 449, 457, 461, 463, 467, 479, 487, 491, 499, 503, 509, 521, 523, 541, 547, 557, 563, 569, 571, 577, 587, 593, 599, 601, 607, 613, 617, 619, 631, 641, 643, 647, 653, 659, 661, 673, 677, 683, 691, 701, 709, 719, 727, 733, 739, 743, 751, 757, 761, 769, 773, 787, 797, 809, 811, 821, 823, 827, 829, 839, 853, 857, 859, 863, 877, 881, 883, 887, 907, 911, 919, 929, 937, 941, 947, 953, 967, 971, 977
-  };
-  VI primes(org_data, org_data + 126);
-  PrimeFactorizer pf = PrimeFactorizer(primes);
+  PrimeFactorizer pf = PrimeFactorizer(1000000);
 
-  for (int i = 1; i < 100; i++){
+  for (int i = 1; i < 1000; i++){
     check(i, pf);
   }
-
-  check(983, pf);
-
-  // check(1000000000, pf);
 
 }
 
