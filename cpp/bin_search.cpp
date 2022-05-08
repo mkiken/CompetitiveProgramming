@@ -57,37 +57,37 @@ const double EPS = 1e-10;
 #define BIN_SEARCH_MAX 1000
 #define BIN_SEARCH_MIN 0
 
-bool check(long u){
+bool check(ll u){
   return true;
 }
 
 // checkを満たす最大の値を二分探索で求める
-long max_bin_search(){
-  long u = BIN_SEARCH_MAX; //BIN_SEARCH_MAXは探索空間の最大値
-  long l = BIN_SEARCH_MIN; //BIN_SEARCH_MINは探索空間の最小値
+ll max_bin_search(){
+  ll u = BIN_SEARCH_MAX; //BIN_SEARCH_MAXは探索空間の最大値
+  ll l = BIN_SEARCH_MIN; //BIN_SEARCH_MINは探索空間の最小値
   if(check(l) == false){return BIN_SEARCH_MIN - 1;} //最小値でfalseだったら全部false
 
-    long m = (l + u) / 2 + (l + u) % 2; //切り捨てではなく切り上げ
+  ll m = (l + u) / 2 + (l + u) % 2; //切り捨てではなく切り上げ
   while(l < u){
     m = (l + u) / 2 + (l + u) % 2;
-	  if(check(m) == false) u = m - 1; //mは探索空間外
-	  else l = m; //mはまだ探索空間に残しておく
+    if(check(m) == false) u = m - 1; //mは探索空間外
+    else l = m; //mはまだ探索空間に残しておく
   }
-  return m;
+  return (u + l) / 2;
 }
 
 // checkを満たす最小の値を二分探索で求める
-long min_bin_search(){
-  long u = BIN_SEARCH_MAX; //BIN_SEARCH_MAXは探索空間の最大値
-  long l = BIN_SEARCH_MIN; //BIN_SEARCH_MINは探索空間の最小値
+ll min_bin_search(){
+  ll u = BIN_SEARCH_MAX; //BIN_SEARCH_MAXは探索空間の最大値
+  ll l = BIN_SEARCH_MIN; //BIN_SEARCH_MINは探索空間の最小値
   if(check(u) == false){return BIN_SEARCH_MAX + 1;} //最大値でfalseだったら全部false
-	  long m = (l + u) / 2;
+  ll m = (l + u) / 2;
   while(l < u){
-	  m = (l + u) / 2;
-	  if(check(m)) u = m; //mはまだ探索空間に残しておく
-	  else l = m + 1; //mは探索空間外
+    m = (l + u) / 2;
+    if(check(m)) u = m; //mはまだ探索空間に残しておく
+    else l = m + 1; //mは探索空間外
   }
-  return m;
+  return (u + l) / 2;
 }
 
 void doIt(){
